@@ -28,6 +28,7 @@
 ## inserting empty lines for rejected segments such that everything from step 3 
 ## (l. 308ff) on can be fully reproduced with the data file named
 ## "bva_export_files_concatenated_500pre_600post_with_empty_artifact_rows_and_labels_no_baseline_anonym.csv"
+## available via https://doi.org/10.17605/OSF.IO/3P96E
 
 #### Routine ####
 
