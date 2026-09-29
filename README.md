@@ -1,0 +1,1 @@
+This repository stores scripts used to aggregate and analyze the EEG data, and plot the results. Plots showing results can be recreated using the data files in the folder aggregated_data. For recreating plots showing the data underlying analyses or reproducing the analyses yourself, please get the data via https://doi.org/10.17605/OSF.IO/3P96E 
