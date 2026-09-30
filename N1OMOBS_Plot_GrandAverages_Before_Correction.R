@@ -17,25 +17,13 @@ data_grand_averages <- data.table::fread("aggregated_data/bva_export_files_conca
 ## set general settings (axes info) ####
 # Insert info
 segment_start <- 500
-segment_end <- 600
-
+segment_end <- 596
 segment_length <- 275
 
-# axis labels
-axis_start <- 400
-axis_label_distance <- 200
-
-# axis ticks (in samplepoints)
-axis_start_sample_points <- 25
-axis_distance <- 50
-zero_line_sample_points <- 125
-
-ylim <- c(1,-2) # limits of y-axis in effect plots
+ylim <- c(1,-2) # limits of y-axis
 ylim_max <- ylim[1]
 ylim_min <-  ylim[2]
 y_axis_ticks_distance <- abs(diff(ylim)/3)
-
-
 
 #### Open plot device ####
 
@@ -53,7 +41,7 @@ data <- data_grand_averages
 data <- data[grepl("notone",data$condition),] # only omission trials
 
 # Define x-axis
-x <- seq(-segment_start, segment_end, length.out=segment_length)
+x <- seq(-segment_start, segment_end, by=4) #length.out=segment_length)
 # Define grand average function for the plot
 gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
                   xlab="", ylab=expression(mu*V), lty=c(1,1), ...) {
@@ -66,17 +54,21 @@ gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), c
   abline(h=0, lty=3) # h=0: horizontal line at 0, lty=3: dashed
   abline(v=0, lty=3) # h=0: horizontal line at 0, lty=3: dashed
   
-  
+
   ## DRAW DATA
   for (i in 1:length(linecat)) {
-    # polygon(x)
-    polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-    #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
+    
+    ok <- !is.na(linecat[[i]])
+    
+     polygon(x=c(x[ok], rev(x[ok])), y=c(as.numeric(linecat[[i]][ok]) + as.numeric(sterror[[i]][ok]), 
+                                rev(as.numeric(linecat[[i]][ok]) - as.numeric(sterror[[i]][ok]))), col=colsterror[i], border=NA, xpd=T)
+    
   }
   
   for (i in 1:length(linecat)) {
-    lines(x, linecat[[i]], col=cols[i], lty=lty[i])
+    
+    ok <- !is.na(linecat[[i]])
+    lines(x[ok], linecat[[i]][ok], col=cols[i], lty=lty[i])
     
   }
   
@@ -187,7 +179,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 amc <- temp
 
@@ -197,7 +189,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 amc_se <- do.call(cbind.data.frame, temp)
 
 
@@ -209,7 +201,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 avc <- temp
 
@@ -219,7 +211,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 avc_se <- do.call(cbind.data.frame, temp)
 
 ## MOC
@@ -230,7 +222,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 moc <- temp
 
@@ -240,7 +232,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 moc_se <- do.call(cbind.data.frame, temp)
 
 ## VOC
@@ -251,7 +243,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 voc <- temp
 
@@ -261,7 +253,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 voc_se <- do.call(cbind.data.frame, temp)
 
 
@@ -273,7 +265,6 @@ all_erps_se <- cbind.data.frame(amc_se,avc_se,moc_se,voc_se)
 gravg(x, linecat= c(all_erps[,1:ncol(all_erps)]),
       sterror = c(all_erps_se[,1:ncol(all_erps)]),
       cols=c("purple3", "blue", "mediumpurple1", "lightblue"), 
-      lwd=3,
       colsterror=c(yarrr::transparent("purple3", trans.val = .7), 
                    yarrr::transparent("blue", trans.val = .7), 
                    yarrr::transparent("mediumpurple1", trans.val = .7), 
@@ -292,49 +283,8 @@ title(ylab=bquote(bold(.("Frontocentral Cluster"))), line=3)
 data <- data_grand_averages
 data <- data[grepl("notone",data$condition),] # only omission trials
 
-# Define x-axis
-x <- seq(-segment_start, segment_end, length.out=segment_length)
-# Define grand average function for the plot
-gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
-                  xlab="", ylab=expression(mu*V), lty=c(1,1), ...) {
-  
-  ## set up an empty plot canvas
-  plot(1, type="l", col=NA, xlim=range(x), ylim=ylim, axes=FALSE,
-       xlab=xlab, ylab=NA, cex.axis=1) # vorher cex.axis=.8
-  
-  axis(1, line=.7) # x-axis
-  abline(h=0, lty=3) # h=0: horizontal line at 0, lty=3: dashed
-  abline(v=0, lty=3) # h=0: horizontal line at 0, lty=3: dashed
-  
-  
-  ## DRAW DATA
-  for (i in 1:length(linecat)) {
-    # polygon(x)
-    polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-    #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
-  }
-  
-  for (i in 1:length(linecat)) {
-    lines(x, linecat[[i]], col=cols[i], lty=lty[i])
-    
-  }
-  
-  
-  
-  ## axis with labels, pos=0: at origin, las=2: horizontal labels
-  axis(2, at=seq(ylim[2],ylim[1], y_axis_ticks_distance), pos=NA, las=2, cex.axis=1)# cex.axis=.8) # vorher pos=0
-  ## small intermediate axis ticks
-  axis(2, at=seq(ylim[2],ylim[1],(y_axis_ticks_distance/2)), pos=NA, labels=NA, tcl=par("tcl")/2, cex.axis=1)#cex.axis=.8)
-  
-  ## custom y-axis label (mikroV)
-  # text(x=-650, y=(ylim[2]), expression(mu*V)) # vorher -150
-}
-
-
 electrodes <- c("FT7", "T7") # left temporal cluster
-start <- -segment_start # first sample point relative to event?
-end <- segment_end # last sample point relative to event?
+
 line_variable <- data$condition # separate lines according to which variable?
 
 # name all variables for which separate plots should be created as specified
@@ -426,7 +376,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 amc <- temp
 
@@ -436,7 +386,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 amc_se <- do.call(cbind.data.frame, temp)
 
 
@@ -448,7 +398,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 avc <- temp
 
@@ -458,7 +408,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 avc_se <- do.call(cbind.data.frame, temp)
 
 ## MOC
@@ -469,7 +419,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 moc <- temp
 
@@ -479,7 +429,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 moc_se <- do.call(cbind.data.frame, temp)
 
 ## VOC
@@ -490,7 +440,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 voc <- temp
 
@@ -500,7 +450,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 voc_se <- do.call(cbind.data.frame, temp)
 
 
@@ -512,7 +462,6 @@ all_erps_se <- cbind.data.frame(amc_se,avc_se,moc_se,voc_se)
 gravg(x, linecat= c(all_erps[,1:ncol(all_erps)]),
       sterror = c(all_erps_se[,1:ncol(all_erps)]),
       cols=c("purple3", "blue", "mediumpurple1", "lightblue"), 
-      lwd=3,
       colsterror=c(yarrr::transparent("purple3", trans.val = .7), 
                    yarrr::transparent("blue", trans.val = .7), 
                    yarrr::transparent("mediumpurple1", trans.val = .7), 
@@ -529,49 +478,8 @@ title(ylab=bquote(bold(.("Left Temporal Cluster"))), line=2.8)
 data <- data_grand_averages
 data <- data[grepl("notone",data$condition),] # only omission trials
 
-# Define x-axis
-x <- seq(-segment_start, segment_end, length.out=segment_length)
-# Define grand average function for the plot
-gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
-                  xlab="", ylab=expression(mu*V), lty=c(1,1), ...) {
-  
-  ## set up an empty plot canvas
-  plot(1, type="l", col=NA, xlim=range(x), ylim=ylim, axes=FALSE,
-       xlab=xlab, ylab=NA, cex.axis=1) # vorher cex.axis=.8
-  
-  axis(1, line=.7) # x-axis
-  abline(h=0, lty=3) # h=0: horizontal line at 0, lty=3: dashed
-  abline(v=0, lty=3) # h=0: horizontal line at 0, lty=3: dashed
-  
-  
-  ## DRAW DATA
-  for (i in 1:length(linecat)) {
-    # polygon(x)
-    polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-    #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
-  }
-  
-  for (i in 1:length(linecat)) {
-    lines(x, linecat[[i]], col=cols[i], lty=lty[i])
-    
-  }
-  
-  
-  
-  ## axis with labels, pos=0: at origin, las=2: horizontal labels
-  axis(2, at=seq(ylim[2],ylim[1], y_axis_ticks_distance), pos=NA, las=2, cex.axis=1)# cex.axis=.8) # vorher pos=0
-  ## small intermediate axis ticks
-  axis(2, at=seq(ylim[2],ylim[1],(y_axis_ticks_distance/2)), pos=NA, labels=NA, tcl=par("tcl")/2, cex.axis=1)#cex.axis=.8)
-  
-  ## custom y-axis label (mikroV)
-  # text(x=-650, y=(ylim[2]), expression(mu*V)) # vorher -150
-}
+electrodes <- c("FT8", "T8") # right temporal cluster
 
-
- electrodes <- c("FT8", "T8") # right temporal cluster
-start <- -segment_start # first sample point relative to event?
-end <- segment_end # last sample point relative to event?
 line_variable <- data$condition # separate lines according to which variable?
 
 # name all variables for which separate plots should be created as specified
@@ -663,7 +571,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 amc <- temp
 
@@ -673,7 +581,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 amc_se <- do.call(cbind.data.frame, temp)
 
 
@@ -685,7 +593,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 avc <- temp
 
@@ -695,7 +603,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 avc_se <- do.call(cbind.data.frame, temp)
 
 ## MOC
@@ -706,7 +614,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 moc <- temp
 
@@ -716,7 +624,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 moc_se <- do.call(cbind.data.frame, temp)
 
 ## VOC
@@ -727,7 +635,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
 temp <- do.call(cbind.data.frame, temp) # convert to data frame
 voc <- temp
 
@@ -737,7 +645,7 @@ temp <- as.data.frame(t(temp)) # transpose (pe categories in columns)
 names(temp) <- temp[1,] # first row as column names
 temp <- as.data.frame(temp[-1,]) # delete first row and rename data
 temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
 voc_se <- do.call(cbind.data.frame, temp)
 
 
@@ -749,7 +657,6 @@ all_erps_se <- cbind.data.frame(amc_se,avc_se,moc_se,voc_se)
 gravg(x, linecat= c(all_erps[,1:ncol(all_erps)]),
       sterror = c(all_erps_se[,1:ncol(all_erps)]),
       cols=c("purple3", "blue", "mediumpurple1", "lightblue"), 
-      lwd=3,
       colsterror=c(yarrr::transparent("purple3", trans.val = .7), 
                    yarrr::transparent("blue", trans.val = .7), 
                    yarrr::transparent("mediumpurple1", trans.val = .7), 

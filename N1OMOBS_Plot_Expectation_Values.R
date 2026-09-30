@@ -42,8 +42,8 @@ for (grp in names(cond_groups)) {
   df_grp <- subset(data_pe_sub, condition %in% conds)
   
   ## Re-index trials within this group
-  df_grp <- df_grp[order(df_grp$trial), ]
-  df_grp$trial_grp <- ave(df_grp$trial, df_grp$id,
+  df_grp <- df_grp[order(df_grp$trial_original), ]
+  df_grp$trial_grp <- ave(df_grp$trial_original, df_grp$id,
                           FUN = function(x) seq_along(x))
   max_trial <- 800
   

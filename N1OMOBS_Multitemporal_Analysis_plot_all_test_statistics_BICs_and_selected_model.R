@@ -14,18 +14,21 @@ setwd("\\\\psychologie.ad.hhu.de/biopsych_experimente/Studien_Daten/2024_CW_N1OM
 #### I - Read model results, create plot for each analysis and save BIC values #### 
 ## Insert general info (which should be the same for all plots) ####
 
+sampling_rate <- 250
+sampling_width <- 1000/sampling_rate
+
 segment_start <- 500
-segment_end <- 600
+segment_end <- 596
 segment_length <- 275
 
 # axis labels
-axis_start <- 400
+axis_start <- -400
 axis_label_distance <- 200
 
 # axis ticks (in samplepoints)
-axis_start_sample_points <- 25
-axis_distance <- 50
-zero_line_sample_points <- 125
+axis_start_sample_points <- (axis_start+segment_start+sampling_width)/sampling_width
+axis_distance <- axis_label_distance/sampling_width
+zero_line_sample_points <- (segment_start+sampling_width)/sampling_width
 
 ylim <- c(2,-2) # limits of y-axis in all grand average plots
 ylim_max <- ylim[1]
@@ -164,7 +167,7 @@ for (p in 1:length(pe_list)){
     
     significanteffect_basis <- fiveinarow_filter(significanteffect_basis)
     
-    # if single trial PEs were involved
+    # if single trial PEs/trial were involved
     if (pe_p != 0){
     
       # fixed effects involving PE
@@ -206,13 +209,10 @@ for (p in 1:length(pe_list)){
       
     } else if (pe_p != 0){
       
-      # to loop through fixed effects:
-      effects <- c("significanteffect_pe", "significanteffect_basis", "significanteffect_interaction")
-      col <- c(
-        "#1B9E77",  # teal-green (clearly not blue)
-        "#E7298A",  # strong pink
-        "#66A61E"   # olive green
-      )
+      effects <- c("significanteffect_basis", "significanteffect_pe", "significanteffect_interaction")
+      col <- c("#E7298A", # magenta for the effect of prediction basis
+                 "#66A61E", # leaf-green for the PE
+                 "#D69C00") # warm-gold for the interaction
       pch <- c(15, 15, 15)
       
     }
@@ -222,7 +222,7 @@ for (p in 1:length(pe_list)){
       
       current_effect <- get(effects[i])
       
-      if (length(current_effect>0)){
+      if (length(current_effect)>0){
         for (j in 1: length(current_effect)){
           points(current_effect[j],
                  ylim_effects[2]-(0.21*abs(diff(ylim_effects)))+(i*(.05*abs(diff(ylim_effects)))),
@@ -236,10 +236,10 @@ for (p in 1:length(pe_list)){
     
     if (pe_p != 0) {
     # Expected vs unexpected omissions
-    lines(pe_coefficients$time, pe_coefficients$coef_pe, col=col[1], lwd = 2, xpd=T)
+    lines(pe_coefficients$time, pe_coefficients$coef_pe, col=col[2], lwd = 2, xpd=T)
     polygon(x=as.numeric(c(pe_coefficients$time, rev(pe_coefficients$time))),
             y=as.numeric(c(pe_coefficients$coef_pe + pe_coefficients$se_pe, 
-                           rev(pe_coefficients$coef_pe - pe_coefficients$se_pe))), col=yarrr::transparent(col[1], trans.val = .7),xpd=T, border=NA)
+                           rev(pe_coefficients$coef_pe - pe_coefficients$se_pe))), col=yarrr::transparent(col[2], trans.val = .7),xpd=T, border=NA)
     
     # Interaction coefficient
     lines(pe_coefficients$time, pe_coefficients$coef_interaction, col=col[3], lwd = 2, xpd=T)
@@ -250,22 +250,22 @@ for (p in 1:length(pe_list)){
     }
     
     # AO vs CUE
-    lines(pe_coefficients$time, pe_coefficients$coef_condition*2, col=col[2], lwd = 2, xpd=T)
+    lines(pe_coefficients$time, pe_coefficients$coef_condition, col=col[1], lwd = 2, xpd=T)
     polygon(x=as.numeric(c(pe_coefficients$time, rev(pe_coefficients$time))),
-            y=as.numeric(c(pe_coefficients$coef_condition*2 + pe_coefficients$se_condition, 
-                           rev(pe_coefficients$coef_condition*2 - pe_coefficients$se_condition))), col=yarrr::transparent(col[2], trans.val = .7),xpd=T, border=NA)
+            y=as.numeric(c(pe_coefficients$coef_condition + pe_coefficients$se_condition, 
+                           rev(pe_coefficients$coef_condition - pe_coefficients$se_condition))), col=yarrr::transparent(col[1], trans.val = .7),xpd=T, border=NA)
     
     
     ## Add indicators for model convergence and singular fit
     
-    # add yellow circles for singular fit models
+    # add golden circles for singular fit models
     if (length(singular)>0){
       for (i in 1:length(singular)){
         points(singular[i], (ylim_effects[1]-(.0375*abs(diff(ylim_effects)))), pch=19, col="coral", xpd=T)
       }
     }
     
-    # add red circles for non-converged model (overwrite singular fit if it is the same)
+    # add coral circles for non-converged model (overwrite singular fit if it is the same)
     if (length(non_convergence)>0){
       for (i in 1:length(non_convergence)){
         points(non_convergence[i], ylim_effects[1], pch=19, col="darkgoldenrod1", xpd=T)#col=10)
@@ -276,7 +276,7 @@ for (p in 1:length(pe_list)){
     
     # Axes
     
-    axis(1, at = seq(axis_start_sample_points,segment_length,axis_distance), labels = seq(-axis_start, segment_end, axis_label_distance), line=.7) # overwrite x-axis (caution!)
+    axis(1, at = seq(axis_start_sample_points,segment_length+1,axis_distance), labels = seq(axis_start, segment_end+sampling_width, axis_label_distance), line=.7) # overwrite x-axis (caution!)
     axis(2, at = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), labels = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), las=2)
     
     # small intermediate axis ticks
@@ -316,7 +316,7 @@ for (p in 1:length(pe_list)){
     data <- data_grand_averages
     
     # Define x-axis
-    x <- seq(-segment_start, segment_end, length.out=segment_length)
+    x <- seq(-segment_start, segment_end, by=sampling_width)
     # Define grand average function for the plot
     gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
                       xlab="", ylab=expression(mu*V), lty=c(1,1,1,1), ...) {
@@ -332,14 +332,18 @@ for (p in 1:length(pe_list)){
       
       ## DRAW DATA
       for (i in 1:length(linecat)) {
-        # polygon(x)
-        polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                    rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-        #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
+        
+        ok <- !is.na(linecat[[i]])
+        
+        polygon(x=c(x[ok], rev(x[ok])), y=c(as.numeric(linecat[[i]][ok]) + as.numeric(sterror[[i]][ok]), 
+                                            rev(as.numeric(linecat[[i]][ok]) - as.numeric(sterror[[i]][ok]))), col=colsterror[i], border=NA, xpd=T)
+        
       }
       
       for (i in 1:length(linecat)) {
-        lines(x, linecat[[i]], col=cols[i], lty=lty[i])
+        
+        ok <- !is.na(linecat[[i]])
+        lines(x[ok], linecat[[i]][ok], col=cols[i], lty=lty[i])
         
       }
       
@@ -353,8 +357,6 @@ for (p in 1:length(pe_list)){
       ## custom y-axis label (mikroV)
       # text(x=-650, y=(ylim[2]), expression(mu*V)) # vorher -150
     }
-    
-
     electrodes <- electrodes_list[[c]] # assign electrode names of current cluster
     
     # data from which electrodes should be used?
@@ -449,7 +451,7 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
     temp <- do.call(cbind.data.frame, temp) # convert to data frame
     amc <- temp
     
@@ -459,7 +461,7 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
     amc_se <- do.call(cbind.data.frame, temp)
     
     
@@ -471,7 +473,7 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
     temp <- do.call(cbind.data.frame, temp) # convert to data frame
     avc <- temp
     
@@ -481,7 +483,7 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
     avc_se <- do.call(cbind.data.frame, temp)
     
     all_erps <- cbind.data.frame(amc,avc)
@@ -513,7 +515,7 @@ for (p in 1:length(pe_list)){
     data <- data_grand_averages
     
     # Define x-axis
-    x <- seq(-segment_start, segment_end, length.out=segment_length)
+    x <- seq(-segment_start, segment_end, by=sampling_width)
     # Define grand average function for the plot
     gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
                       xlab="", ylab=expression(mu*V), lty=c(1,1,1,1), ...) {
@@ -529,14 +531,18 @@ for (p in 1:length(pe_list)){
       
       ## DRAW DATA
       for (i in 1:length(linecat)) {
-        # polygon(x)
-        polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                    rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-        #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
+        
+        ok <- !is.na(linecat[[i]])
+        
+        polygon(x=c(x[ok], rev(x[ok])), y=c(as.numeric(linecat[[i]][ok]) + as.numeric(sterror[[i]][ok]), 
+                                            rev(as.numeric(linecat[[i]][ok]) - as.numeric(sterror[[i]][ok]))), col=colsterror[i], border=NA, xpd=T)
+        
       }
       
       for (i in 1:length(linecat)) {
-        lines(x, linecat[[i]], col=cols[i], lty=lty[i])
+        
+        ok <- !is.na(linecat[[i]])
+        lines(x[ok], linecat[[i]][ok], col=cols[i], lty=lty[i])
         
       }
       
@@ -550,7 +556,6 @@ for (p in 1:length(pe_list)){
       ## custom y-axis label (mikroV)
       # text(x=-650, y=(ylim[2]), expression(mu*V)) # vorher -150
     }
-    
     ## categorize continuous pe/trial variable for separate lines
     
     if (pe_p == 1){  # trial variable
@@ -574,11 +579,9 @@ for (p in 1:length(pe_list)){
       include.lowest = TRUE,
       labels = FALSE
     )
-    electrodes <- electrodes_list[[c]] # assign electrode names of current cluster
     
     # data from which electrodes should be used?
-    start <- -segment_start # first sample point relative to event?
-    end <- segment_end # last sample point relative to event?
+    electrodes <- electrodes_list[[c]] # assign electrode names of current cluster
     
     line_variable <- data$pe_c_cat # separate lines according to which variable?
     plot_variable <- data$condition # separate plots within one png according to which variable?
@@ -669,7 +672,7 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
     temp <- do.call(cbind.data.frame, temp) # convert to data frame
     amc <- temp
     
@@ -679,7 +682,7 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
     amc_se <- do.call(cbind.data.frame, temp)
     
     
@@ -691,7 +694,7 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
     temp <- do.call(cbind.data.frame, temp) # convert to data frame
     avc <- temp
     
@@ -701,11 +704,11 @@ for (p in 1:length(pe_list)){
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
     avc_se <- do.call(cbind.data.frame, temp)
     
     ## Action Observation
-    gravg(x, linecat= c(amc[,1:ncol(amc)]), sterror = c(amc_se[,1:ncol(amc)]),  cols=viridis::viridis_pal()(ncol(amc)), lwd=3, colsterror=viridis::viridis_pal(alpha=.4)(ncol(amc))) # topleft
+    gravg(x, linecat= c(amc[,1:ncol(amc)]), sterror = c(amc_se[,1:ncol(amc)]),  cols=viridis::viridis_pal()(ncol(amc)), colsterror=viridis::viridis_pal(alpha=.4)(ncol(amc))) # topleft
     title(ylab = expression("amplitude, "~mu*V), line=1.2)
     
     ## title above plots (but only in first row)
@@ -817,19 +820,22 @@ dev.off()
 #### III - Create plot With selected models (and additional GAs separated by PEs/Trial if included) ####
 
 ## Insert general info (which should be the same for all plots) ####
-segment_start <- 500
-segment_end <- 600
 
+sampling_rate <- 250
+sampling_width <- 1000/sampling_rate
+
+segment_start <- 500
+segment_end <- 596
 segment_length <- 275
 
 # axis labels
-axis_start <- 400
+axis_start <- -400
 axis_label_distance <- 200
 
 # axis ticks (in samplepoints)
-axis_start_sample_points <- 25
-axis_distance <- 50
-zero_line_sample_points <- 125
+axis_start_sample_points <- (axis_start+segment_start+sampling_width)/sampling_width
+axis_distance <- axis_label_distance/sampling_width
+zero_line_sample_points <- (segment_start+sampling_width)/sampling_width
 
 ylim <- c(1,-1) # limits of y-axis in all grand average plots
 ylim_max <- ylim[1]
@@ -967,7 +973,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     current_effect <- get(effects[i])
     
-    if (length(current_effect>0)){
+    if (length(current_effect)>0){
       for (j in 1: length(current_effect)){
         points(current_effect[j],
                ylim_effects[2]-(0.21*abs(diff(ylim_effects)))+(i*(.05*abs(diff(ylim_effects)))),
@@ -993,14 +999,14 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   
   ## Add indicators for model convergence and singular fit
   
-  # add yellow circles for singular fit models
+  # add golden circles for singular fit models
   if (length(singular)>0){
     for (i in 1:length(singular)){
       points(singular[i], (ylim_effects[1]-(.0375*abs(diff(ylim_effects)))), pch=19, col="coral", xpd=T)
     }
   }
   
-  # add red circles for non-converged model (overwrite singular fit if it is the same)
+  # add coral circles for non-converged model (overwrite singular fit if it is the same)
   if (length(non_convergence)>0){
     for (i in 1:length(non_convergence)){
       points(non_convergence[i], ylim_effects[1], pch=19, col="darkgoldenrod1", xpd=T)#col=10)
@@ -1010,7 +1016,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   ## Annotations
   
   # Axes
-  axis(1, at = seq(axis_start_sample_points,segment_length,axis_distance), labels = seq(-axis_start, segment_end, axis_label_distance), line=.7) # overwrite x-axis (caution!)
+  axis(1, at = seq(axis_start_sample_points,segment_length+1,axis_distance), labels = seq(axis_start, segment_end+sampling_width, axis_label_distance), line=.7) # overwrite x-axis (caution!)
   axis(2, at = seq(ylim_effects[1],ylim_effects[2],y_axis_ticks_distance_effects), labels = seq(ylim_effects[1],ylim_effects[2],y_axis_ticks_distance_effects), las=2)
   # small intermediate axis ticks
   axis(2, at=seq(ylim_effects[1],ylim_effects[2],(y_axis_ticks_distance_effects/2)), pos=NA, labels=NA, tcl=par("tcl")/2, cex.axis=1)
@@ -1048,7 +1054,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   data <- data_grand_averages
   
   # Define x-axis
-  x <- seq(-segment_start, segment_end, length.out=segment_length)
+  x <- seq(-segment_start, segment_end, by=sampling_width)
   # Define grand average function for the plot
   gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
                     xlab="", ylab=expression(mu*V), lty=c(1,1,1,1), ...) {
@@ -1064,14 +1070,18 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     ## DRAW DATA
     for (i in 1:length(linecat)) {
-      # polygon(x)
-      polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                  rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-      #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
+      
+      ok <- !is.na(linecat[[i]])
+      
+      polygon(x=c(x[ok], rev(x[ok])), y=c(as.numeric(linecat[[i]][ok]) + as.numeric(sterror[[i]][ok]), 
+                                          rev(as.numeric(linecat[[i]][ok]) - as.numeric(sterror[[i]][ok]))), col=colsterror[i], border=NA, xpd=T)
+      
     }
     
     for (i in 1:length(linecat)) {
-      lines(x, linecat[[i]], col=cols[i], lty=lty[i])
+      
+      ok <- !is.na(linecat[[i]])
+      lines(x[ok], linecat[[i]][ok], col=cols[i], lty=lty[i])
       
     }
     
@@ -1085,8 +1095,6 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     ## custom y-axis label (mikroV)
     # text(x=-650, y=(ylim[2]), expression(mu*V)) # vorher -150
   }
-  
-  
   electrodes <- electrodes_list[[c]] # assign electrode names of current cluster
   
   # data from which electrodes should be used?
@@ -1181,7 +1189,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
   temp <- do.call(cbind.data.frame, temp) # convert to data frame
   amc <- temp
   
@@ -1191,7 +1199,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
   amc_se <- do.call(cbind.data.frame, temp)
   
   
@@ -1203,7 +1211,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
   temp <- do.call(cbind.data.frame, temp) # convert to data frame
   avc <- temp
   
@@ -1213,7 +1221,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
   avc_se <- do.call(cbind.data.frame, temp)
   
   all_erps <- cbind.data.frame(amc,avc)
@@ -1241,7 +1249,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     current_effect <- get(effects[i])
     
-    if (length(current_effect>0)){
+    if (length(current_effect)>0){
       
       current_effect <- current_effect*4-504 # transform samplepoint to ms 
       
@@ -1265,8 +1273,9 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   data <- data_grand_averages
   
   # Define x-axis
-  x <- seq(-segment_start, segment_end, length.out=segment_length)
+  x <- seq(-segment_start, segment_end, by=sampling_width)
   # Define grand average function for the plot
+
   gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
                     xlab="", ylab=expression(mu*V), lty=c(1,1,1,1), ...) {
     
@@ -1281,14 +1290,18 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     ## DRAW DATA
     for (i in 1:length(linecat)) {
-      # polygon(x)
-      polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                  rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-      #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
+      
+      ok <- !is.na(linecat[[i]])
+      
+      polygon(x=c(x[ok], rev(x[ok])), y=c(as.numeric(linecat[[i]][ok]) + as.numeric(sterror[[i]][ok]), 
+                                          rev(as.numeric(linecat[[i]][ok]) - as.numeric(sterror[[i]][ok]))), col=colsterror[i], border=NA, xpd=T)
+      
     }
     
     for (i in 1:length(linecat)) {
-      lines(x, linecat[[i]], col=cols[i], lty=lty[i], xpd=T)
+      
+      ok <- !is.na(linecat[[i]])
+      lines(x[ok], linecat[[i]][ok], col=cols[i], lty=lty[i])
       
     }
     
@@ -1302,7 +1315,6 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     ## custom y-axis label (mikroV)
     # text(x=-650, y=(ylim[2]), expression(mu*V)) # vorher -150
   }
-  
   ## categorize continuous pe/trial variable for separate lines
   
   if (pe_p == 1){  # trial variable
@@ -1421,7 +1433,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
   temp <- do.call(cbind.data.frame, temp) # convert to data frame
   amc <- temp
   
@@ -1431,7 +1443,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
   amc_se <- do.call(cbind.data.frame, temp)
   
   
@@ -1443,7 +1455,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
   temp <- do.call(cbind.data.frame, temp) # convert to data frame
   avc <- temp
   
@@ -1453,7 +1465,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
   avc_se <- do.call(cbind.data.frame, temp)
   
   ## Action Observation
@@ -1491,19 +1503,22 @@ dev.off() # close device
 #### IV - Create same plot with adjusted scaling for GAs separated by PE (if necessary) ####
 
 ## Insert general info (which should be the same for all plots) ####
-segment_start <- 500
-segment_end <- 600
 
+sampling_rate <- 250
+sampling_width <- 1000/sampling_rate
+
+segment_start <- 500
+segment_end <- 596
 segment_length <- 275
 
 # axis labels
-axis_start <- 400
+axis_start <- -400
 axis_label_distance <- 200
 
 # axis ticks (in samplepoints)
-axis_start_sample_points <- 25
-axis_distance <- 50
-zero_line_sample_points <- 125
+axis_start_sample_points <- (axis_start+segment_start+sampling_width)/sampling_width
+axis_distance <- axis_label_distance/sampling_width
+zero_line_sample_points <- (segment_start+sampling_width)/sampling_width
 
 ylim <- c(2,-2) # limits of y-axis in all grand average plots
 ylim_max <- ylim[1]
@@ -1582,10 +1597,6 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     return(out)
   }
   
-  # for intercept
-  significanteffect_intercept <- which(p.adjust(pe_coefficients$p_intercept, method = "BH") < .05)
-  significanteffect_intercept <- fiveinarow_filter(significanteffect_intercept)
-  
   # for fixed main effect of prediction basis (included in every model)
   significanteffect_basis <- which(p.adjust(pe_coefficients$p_condition, method = "BH") < .05)
   significanteffect_basis <- fiveinarow_filter(significanteffect_basis)
@@ -1627,12 +1638,6 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   # create list of effects and colors for loop (depending on PE)
   if (pe_p == 0) { # analyses without single-trial PE
     
-    # # to loop through fixed effects:
-    # effects <- c("significanteffect_intercept", "significanteffect_basis")
-    # col <- c("#4B9CD3", # cerulean blue for the intercept
-    #          "#E7298A") # magenta for the effect of prediction basis
-    # pch <- c(15, 15)
-    
     # to loop through fixed effects:
     effects <- c("significanteffect_basis")
     col <- c(
@@ -1642,13 +1647,6 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
   } else if (pe_p != 0){
     
-    # effects <- c("significanteffect_intercept", "significanteffect_basis", "significanteffect_pe", "significanteffect_interaction")
-    # col <- c("#4B9CD3", # cerulean blue for the intercept
-    #          "#E7298A", # magenta for the effect of prediction basis
-    #          "#66A61E", # leaf-green for the PE
-    #          "#D69C00") # warm-gold for the interaction
-    # pch <- c(15, 15, 15, 15)
-    # 
     effects <- c("significanteffect_basis", "significanteffect_pe", "significanteffect_interaction")
     col <- c("#E7298A", # magenta for the effect of prediction basis
              "#66A61E", # leaf-green for the PE
@@ -1662,7 +1660,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     current_effect <- get(effects[i])
     
-    if (length(current_effect>0)){
+    if (length(current_effect)>0){
       for (j in 1: length(current_effect)){
         points(current_effect[j],
                ylim_effects[2]-(0.21*abs(diff(ylim_effects)))+(i*(.05*abs(diff(ylim_effects)))),
@@ -1689,19 +1687,16 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   # AO vs CUE
   lines(pe_coefficients$time, pe_coefficients$t_condition, col=col[which(effects == "significanteffect_basis")], lwd = 2, xpd=T)
   
-  # Intercept
-  #lines(pe_coefficients$time, pe_coefficients$t_intercept, col=col[1], lwd = 2, xpd=T)
-  
   ## Add indicators for model convergence and singular fit
   
-  # add yellow circles for singular fit models
+  # add golden circles for singular fit models
   if (length(singular)>0){
     for (i in 1:length(singular)){
       points(singular[i], (ylim_effects[1]-(.0375*abs(diff(ylim_effects)))), pch=19, col="coral", xpd=T)
     }
   }
   
-  # add red circles for non-converged model (overwrite singular fit if it is the same)
+  # add coral circles for non-converged model (overwrite singular fit if it is the same)
   if (length(non_convergence)>0){
     for (i in 1:length(non_convergence)){
       points(non_convergence[i], ylim_effects[1], pch=19, col="darkgoldenrod1", xpd=T)#col=10)
@@ -1712,7 +1707,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   
   # Axes
   
-  axis(1, at = seq(axis_start_sample_points,segment_length,axis_distance), labels = seq(-axis_start, segment_end, axis_label_distance), line=.7) # overwrite x-axis (caution!)
+  axis(1, at = seq(axis_start_sample_points,segment_length+1,axis_distance), labels = seq(axis_start, segment_end+sampling_width, axis_label_distance), line=.7) # overwrite x-axis (caution!)
   axis(2, at = seq(ylim_effects[1],ylim_effects[2],y_axis_ticks_distance_effects), labels = seq(ylim_effects[1],ylim_effects[2],y_axis_ticks_distance_effects), las=2)
   
   # small intermediate axis ticks
@@ -1753,7 +1748,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   data <- data_grand_averages
   
   # Define x-axis
-  x <- seq(-segment_start, segment_end, length.out=segment_length)
+  x <- seq(-segment_start, segment_end, by=sampling_width)
   # Define grand average function for the plot
   gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
                     xlab="", ylab=expression(mu*V), lty=c(1,1,1,1), ...) {
@@ -1769,14 +1764,18 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     ## DRAW DATA
     for (i in 1:length(linecat)) {
-      # polygon(x)
-      polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                  rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-      #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
+      
+      ok <- !is.na(linecat[[i]])
+      
+      polygon(x=c(x[ok], rev(x[ok])), y=c(as.numeric(linecat[[i]][ok]) + as.numeric(sterror[[i]][ok]), 
+                                          rev(as.numeric(linecat[[i]][ok]) - as.numeric(sterror[[i]][ok]))), col=colsterror[i], border=NA, xpd=T)
+      
     }
     
     for (i in 1:length(linecat)) {
-      lines(x, linecat[[i]], col=cols[i], lty=lty[i])
+      
+      ok <- !is.na(linecat[[i]])
+      lines(x[ok], linecat[[i]][ok], col=cols[i], lty=lty[i])
       
     }
     
@@ -1790,7 +1789,6 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     ## custom y-axis label (mikroV)
     # text(x=-650, y=(ylim[2]), expression(mu*V)) # vorher -150
   }
-  
   
   electrodes <- electrodes_list[[c]] # assign electrode names of current cluster
   
@@ -1886,7 +1884,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
   temp <- do.call(cbind.data.frame, temp) # convert to data frame
   amc <- temp
   
@@ -1896,7 +1894,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
   amc_se <- do.call(cbind.data.frame, temp)
   
   
@@ -1908,7 +1906,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
   temp <- do.call(cbind.data.frame, temp) # convert to data frame
   avc <- temp
   
@@ -1918,7 +1916,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   names(temp) <- temp[1,] # first row as column names
   temp <- as.data.frame(temp[-1,]) # delete first row and rename data
   temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+  temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
   avc_se <- do.call(cbind.data.frame, temp)
   
   all_erps <- cbind.data.frame(amc,avc)
@@ -1946,7 +1944,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     current_effect <- get(effects[i])
     
-    if (length(current_effect>0)){
+    if (length(current_effect)>0){
       
       current_effect <- current_effect*4-504 # transform samplepoint to ms 
       
@@ -1970,7 +1968,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     data <- data_grand_averages
     
     # Define x-axis
-    x <- seq(-segment_start, segment_end, length.out=segment_length)
+    x <- seq(-segment_start, segment_end, by=sampling_width)
     # Define grand average function for the plot
     gravg <- function(x, linecat, sterror, ylim=c(ylim_max,ylim_min), cols=c(1,2), colsterror=c(1,2),
                       xlab="", ylab=expression(mu*V), lty=c(1,1,1,1), ...) {
@@ -1986,14 +1984,18 @@ for (c in 1:length(cluster_list)){ # loop through cluster
       
       ## DRAW DATA
       for (i in 1:length(linecat)) {
-        # polygon(x)
-        polygon(x=c(x, rev(x)), y=c(as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), 
-                                    rev(as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]))), col=colsterror[i], border=NA, xpd=T)
-        #rect(x-0.5, as.numeric(linecat[[i]]) - as.numeric(sterror[[i]]), x+0.5, as.numeric(linecat[[i]]) + as.numeric(sterror[[i]]), col=colsterror[i], border=NA)
+        
+        ok <- !is.na(linecat[[i]])
+        
+        polygon(x=c(x[ok], rev(x[ok])), y=c(as.numeric(linecat[[i]][ok]) + as.numeric(sterror[[i]][ok]), 
+                                            rev(as.numeric(linecat[[i]][ok]) - as.numeric(sterror[[i]][ok]))), col=colsterror[i], border=NA, xpd=T)
+        
       }
       
       for (i in 1:length(linecat)) {
-        lines(x, linecat[[i]], col=cols[i], lty=lty[i], xpd=T)
+        
+        ok <- !is.na(linecat[[i]])
+        lines(x[ok], linecat[[i]][ok], col=cols[i], lty=lty[i])
         
       }
       
@@ -2126,7 +2128,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
     temp <- do.call(cbind.data.frame, temp) # convert to data frame
     amc <- temp
     
@@ -2136,7 +2138,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
     amc_se <- do.call(cbind.data.frame, temp)
     
     
@@ -2148,7 +2150,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric) # convert columns to numeric
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0) # apply rolling mean
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA) # apply rolling mean
     temp <- do.call(cbind.data.frame, temp) # convert to data frame
     avc <- temp
     
@@ -2158,7 +2160,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     names(temp) <- temp[1,] # first row as column names
     temp <- as.data.frame(temp[-1,]) # delete first row and rename data
     temp[,1:ncol(temp)] <- sapply(temp[,1:ncol(temp)],as.numeric)
-    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=0)
+    temp <- data.table::frollapply(temp, 5, mean, align="center", fill=NA)
     avc_se <- do.call(cbind.data.frame, temp)
     
     ## Action Observation
@@ -2195,7 +2197,7 @@ dev.off() # close device
 
 #### V - Legend  ####
 
-png(filename = paste0("plots/legend_multitemp_analysis",as.character(Sys.Date()),".png"),
+png(filename = paste0("plots/legend_multitemp_analysis_",as.character(Sys.Date()),".png"),
     width=8.5, height=2.5, unit="in", res=400)
 
 # Set plot parameters:
@@ -2206,12 +2208,10 @@ plot(0)
 
 legend("topleft", 
        lty=c(1,1,1), 
-       col = c(#"#4B9CD3", # cerulean blue for the intercept
-               "#E7298A", # magenta for the effect of prediction basis
+       col = c( "#E7298A", # magenta for the effect of prediction basis
                "#66A61E", # leaf-green for the PE
                "#D69C00"), # warm-gold for the interaction
-       legend = c(#"Intercept", 
-         "Prediction Basis (Corrected)", "Single-Trial PE", "Single-Trial PE x Prediction Basis (Corrected)"),
+       legend = c("Prediction Basis (Corrected)", "Single-Trial PE", "Single-Trial PE x Prediction Basis (Corrected)"),
        lwd=2, cex = 0.7, bty = "n")
 
 
@@ -2234,6 +2234,13 @@ text(x = leg$rect$left+.02,
 
 plot(0)
 
+legend("topleft", 
+       pch=c(19,19), 
+       col = c("darkgoldenrod1", # golden for non-convergence
+         "coral"), # coral for singular fit
+     
+       legend = c("No convergence", "Singular-fit"),
+       cex = 0.7, bty = "n")
                        
 leg <- legend("bottomleft", legend = c("Low PE (lower quantile)",
                               "Medium PE (middle quantile)",

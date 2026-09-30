@@ -10,18 +10,21 @@ getwd() # show current working directory
 setwd("\\\\psychologie.ad.hhu.de/biopsych_experimente/Studien_Daten/2024_CW_N1OMOBS")
 
 ## Insert general info ####
+sampling_rate <- 250
+sampling_width <- 1000/sampling_rate
+
 segment_start <- 500
-segment_end <- 600
+segment_end <- 596
 segment_length <- 275
 
 # axis labels
-axis_start <- 400
+axis_start <- -400
 axis_label_distance <- 200
 
 # axis ticks (in samplepoints)
-axis_start_sample_points <- 25
-axis_distance <- 50
-zero_line_sample_points <- 125
+axis_start_sample_points <- (axis_start+segment_start+sampling_width)/sampling_width
+axis_distance <- axis_label_distance/sampling_width
+zero_line_sample_points <- (segment_start+sampling_width)/sampling_width
 
 ylim_effects <- c(1,-1) # limits of y-axis in effects plots
 y_axis_ticks_distance_effects <- abs(diff(ylim_effects)/2)
@@ -73,7 +76,7 @@ for (i in 1:length(effects)){
       
       current_effect <- get(effects[i])
       
-      if (length(current_effect>0)){
+      if (length(current_effect)>0){
         for (j in 1: length(current_effect)){
           points(current_effect[j],
                  ylim_effects[2]-(0.21*abs(diff(ylim_effects)))+(i*(.05*abs(diff(ylim_effects)))),
@@ -102,9 +105,8 @@ for (i in 1:length(effects)){
     ## Annotations
     
     # Axes
-    
-    axis(1, at = seq(axis_start_sample_points,segment_length,axis_distance), labels = seq(-axis_start, segment_end, axis_label_distance), line=.7) # overwrite x-axis (caution!)
-    axis(2, at = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), labels = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), las=2)
+      axis(1, at = seq(axis_start_sample_points,segment_length+1,axis_distance), labels = seq(axis_start, segment_end+sampling_width, axis_label_distance), line=.7) # overwrite x-axis (caution!)
+      axis(2, at = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), labels = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), las=2)
     
     # small intermediate axis ticks
     axis(2, at=seq(ylim_effects[2],ylim_effects[1],(y_axis_ticks_distance_effects/2)), pos=NA, labels=NA, tcl=par("tcl")/2, cex.axis=1)
@@ -144,7 +146,7 @@ for (i in 1:length(effects)){
     
     current_effect <- get(effects[i])
     
-    if (length(current_effect>0)){
+    if (length(current_effect)>0){
       for (j in 1: length(current_effect)){
         points(current_effect[j],
                ylim_effects[2]-(0.21*abs(diff(ylim_effects)))+(i*(.05*abs(diff(ylim_effects)))),
@@ -174,7 +176,7 @@ for (i in 1:length(effects)){
   
   # Axes
   
-  axis(1, at = seq(axis_start_sample_points,segment_length,axis_distance), labels = seq(-axis_start, segment_end, axis_label_distance), line=.7) # overwrite x-axis (caution!)
+  axis(1, at = seq(axis_start_sample_points,segment_length+1,axis_distance), labels = seq(axis_start, segment_end+sampling_width, axis_label_distance), line=.7) # overwrite x-axis (caution!)
   axis(2, at = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), labels = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), las=2)
   
   # small intermediate axis ticks
@@ -215,7 +217,7 @@ for (i in 1:length(effects)){
     
     current_effect <- get(effects[i])
     
-    if (length(current_effect>0)){
+    if (length(current_effect)>0){
       for (j in 1: length(current_effect)){
         points(current_effect[j],
                ylim_effects[2]-(0.21*abs(diff(ylim_effects)))+(i*(.05*abs(diff(ylim_effects)))),
@@ -245,7 +247,7 @@ for (i in 1:length(effects)){
   
   # Axes
   
-  axis(1, at = seq(axis_start_sample_points,segment_length,axis_distance), labels = seq(-axis_start, segment_end, axis_label_distance), line=.7) # overwrite x-axis (caution!)
+  axis(1, at = seq(axis_start_sample_points,segment_length+1,axis_distance), labels = seq(axis_start, segment_end+sampling_width, axis_label_distance), line=.7) # overwrite x-axis (caution!)
   axis(2, at = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), labels = seq(ylim_effects[2],ylim_effects[1],y_axis_ticks_distance_effects), las=2)
   
   # small intermediate axis ticks
@@ -261,8 +263,8 @@ for (i in 1:length(effects)){
   # Time Zero Line
   abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at feedback onset
   
-  
-  
-  dev.off() # close device
+#### Close plot ####
+
+dev.off() # close device
   
   

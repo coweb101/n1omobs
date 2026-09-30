@@ -26,7 +26,7 @@ fiveinarow_filter <- function(x) {
 
 #### Frontocentral Cluster - Read data and get significant fixed effects ####
 
-# for this cluster, the PE with a learning rtae of .01 fitted the data best
+# for this cluster, the PE with a learning rate of .01 fitted the data best
 pe_coefficients <- data.table::fread("aggregated_data/multitemp_pre500_post600_frontocentral_cluster_pe_0.01_no_baseline.csv", quote="") # read data again
 
 # get significant effects for all fixed effects
@@ -66,7 +66,7 @@ round(pe_coefficients[which(pe_coefficients$coef_condition == max(pe_coefficient
 
 # and then for the minimum
 which(pe_coefficients$coef_condition == min(pe_coefficients$coef_condition[significanteffect_basis]))
-# maximum at samplepoint 101
+# minimum at samplepoint 101
 which(pe_coefficients$coef_condition == min(pe_coefficients$coef_condition[significanteffect_basis]))*4-504
 # i.e. at -100 ms relative to omission onset (samplepoint*4-504)
 
@@ -80,6 +80,7 @@ round(pe_coefficients[which(pe_coefficients$coef_condition == min(pe_coefficient
 
 ## PE ####
 
+# no significant effects, but exploring the non-significant peaks of main effect and interaction
 pe_coefficients$coef_pe  # coefficients are both positive and negative
 
 # therefore I look for the absolute maximum
@@ -134,7 +135,8 @@ round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficie
 
 
 ## Follow-up tests against zero ####
-significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc < .05)
+
+significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc < .05) # follow-up tests only checked for p < .05
 diff(significanteffect_diff_zero_amc)
 significanteffect_diff_zero_amc*4-504
 
@@ -143,7 +145,7 @@ split(significanteffect_diff_zero_amc*4-504, cumsum(c(TRUE, diff(significanteffe
 
 
 significanteffect_diff_zero_avc <- which(pe_coefficients$emmean_p_avc < .05)
-diff(significanteffect_diff_zero_amc)
+diff(significanteffect_diff_zero_avc)
 significanteffect_diff_zero_avc*4-504
 
 split(significanteffect_diff_zero_avc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_avc) != 1)))
@@ -196,7 +198,7 @@ significanteffect_diff_zero_avc*4-504
 
 #### Right Temporal Cluster ####
 
-# for this cluster, the PE with a learning rtae of .034 fitted the data best
+# for this cluster, the PE with a learning rate of .034 fitted the data best
 pe_coefficients <- data.table::fread("aggregated_data/multitemp_pre500_post600_right_temporal_cluster_pe_0.034_no_baseline.csv", quote="") # read data again
 
 significanteffect_basis <- which(p.adjust(pe_coefficients$p_condition, method = "BH") < .05)
@@ -231,7 +233,7 @@ round(pe_coefficients[which(pe_coefficients$coef_pe == max(pe_coefficients$coef_
 ## Interaction ####
 
 pe_coefficients$coef_interaction
-# all coefficients are negative
+# most coefficients are negative (2 positive)
 
 # look for absolute largest effect
 which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction)))
