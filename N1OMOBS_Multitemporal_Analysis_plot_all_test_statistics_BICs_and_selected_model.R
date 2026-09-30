@@ -309,7 +309,7 @@ for (p in 1:length(pe_list)){
     }
     
     # Time Zero Line
-    abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at feedback onset
+    abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at omission onset
     #### Plot Grand Averages (Sep. for Prediction Basis)  ####
     
     # get data
@@ -1047,7 +1047,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   }
   
   # Time Zero Line
-  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at feedback onset
+  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at omission onset
   #### Plot Grand Averages (Sep. for Prediction Basis)  ####
   
   # get data
@@ -1741,7 +1741,7 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   }
   
   # Time Zero Line
-  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at feedback onset
+  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at omission onset
   #### Plot Grand Averages (Sep. for Prediction Basis)  ####
   
   # get data
