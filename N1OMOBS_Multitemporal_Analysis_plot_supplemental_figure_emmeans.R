@@ -119,7 +119,7 @@ for (i in 1:length(effects)){
     #title(xlab="time, ms", cex=1.2, line = 2.5)
     
     # Time Zero Line
-    abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at feedback onset
+    abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at omission onset
 
 
 
@@ -190,7 +190,7 @@ for (i in 1:length(effects)){
   #title(xlab="time, ms", cex=1.2, line = 2.5)
   
   # Time Zero Line
-  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at feedback onset
+  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at omission onset
   
 
   
@@ -261,7 +261,7 @@ for (i in 1:length(effects)){
   title(xlab="time, ms", cex=1.2, line = 2.5)
   
   # Time Zero Line
-  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at feedback onset
+  abline(v=zero_line_sample_points, h=0, lty=3) # dashed zerolines at omission onset
   
 #### Close plot ####
 
