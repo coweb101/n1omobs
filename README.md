@@ -11,7 +11,7 @@ The EEG data was preprocessed in BrainVision Analyzer beforehand (for details, s
 3) Download the concatenated EEG data sets stored at https://doi.org/10.17605/OSF.IO/3P96E and place these in the subfolder "aggregated_data",
 4) Create a subfolder "plots" in your wd, 
 5) Run the script N1OMOBS_data_aggregation_and_multitemporal_analysis.R at first (which needs approximately 30hours with 64 GB RAM),
-6) Run all other scripts (oder doesn't matter).
+6) Run all other scripts (order doesn't matter).
 
 **To reproduce plots:**
 
