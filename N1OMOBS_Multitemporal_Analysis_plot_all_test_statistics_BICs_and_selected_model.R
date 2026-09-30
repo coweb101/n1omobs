@@ -258,14 +258,14 @@ for (p in 1:length(pe_list)){
     
     ## Add indicators for model convergence and singular fit
     
-    # add golden circles for singular fit models
+    # add coral circles for singular fit models
     if (length(singular)>0){
       for (i in 1:length(singular)){
         points(singular[i], (ylim_effects[1]-(.0375*abs(diff(ylim_effects)))), pch=19, col="coral", xpd=T)
       }
     }
     
-    # add coral circles for non-converged model (overwrite singular fit if it is the same)
+    # add golden circles for non-converged model (overwrite singular fit if it is the same)
     if (length(non_convergence)>0){
       for (i in 1:length(non_convergence)){
         points(non_convergence[i], ylim_effects[1], pch=19, col="darkgoldenrod1", xpd=T)#col=10)
@@ -999,14 +999,14 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   
   ## Add indicators for model convergence and singular fit
   
-  # add golden circles for singular fit models
+  # add coral circles for singular fit models
   if (length(singular)>0){
     for (i in 1:length(singular)){
       points(singular[i], (ylim_effects[1]-(.0375*abs(diff(ylim_effects)))), pch=19, col="coral", xpd=T)
     }
   }
   
-  # add coral circles for non-converged model (overwrite singular fit if it is the same)
+  # add golden circles for non-converged model (overwrite singular fit if it is the same)
   if (length(non_convergence)>0){
     for (i in 1:length(non_convergence)){
       points(non_convergence[i], ylim_effects[1], pch=19, col="darkgoldenrod1", xpd=T)#col=10)
@@ -1689,14 +1689,14 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   
   ## Add indicators for model convergence and singular fit
   
-  # add golden circles for singular fit models
+  # add coral circles for singular fit models
   if (length(singular)>0){
     for (i in 1:length(singular)){
       points(singular[i], (ylim_effects[1]-(.0375*abs(diff(ylim_effects)))), pch=19, col="coral", xpd=T)
     }
   }
   
-  # add coral circles for non-converged model (overwrite singular fit if it is the same)
+  # add golden circles for non-converged model (overwrite singular fit if it is the same)
   if (length(non_convergence)>0){
     for (i in 1:length(non_convergence)){
       points(non_convergence[i], ylim_effects[1], pch=19, col="darkgoldenrod1", xpd=T)#col=10)
