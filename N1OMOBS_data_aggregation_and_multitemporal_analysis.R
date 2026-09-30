@@ -515,7 +515,7 @@ data <- as.data.frame(data) # ensure that data is a data frame (and not a list)
 data$condition_model <- ifelse(data$condition=="amc_notone_corr", -1,
                                ifelse(data$condition=="avc_notone_corr", 1, NA))
 
-## Median-center PE variables
+## Logtransform and median-center PE variables (because of left-skewed distribution)
 pe_variables <- paste0("pe_", alpha_range)
 
 # create plot to examine distributions
@@ -540,7 +540,7 @@ for (i in 1:length(pe_variables)){
 
 dev.off()
 
-## Mean-center and rescale trial variable
+## Rescale trial variable
 
 # Show distribution 
 hist(abs(data[,"trial_original"]),  main=paste0("Trial Original"), xlim=c(1,2500), ylim=c(0,8000), breaks=17, xlab="Trial")
@@ -556,15 +556,15 @@ data$trial_original[index] <- scales::rescale(data$trial_original[index], to = c
 # check if all trial values now fall between 1 and 1800
 hist(abs(data[,"trial_original"]),  main=paste0("Trial Original"), xlim=c(1,2500), ylim=c(0,8000), breaks=17, xlab="Trial")
 
-# center trial variable
+# rescale trial variable
 data[,"scaled_trial"] <- data[,"trial_original"]
-data[,"scaled_trial"] <- data[,"scaled_trial"] -  mean(data[,"scaled_trial"], na.rm=T) # center around mean
+# data[,"scaled_trial"] <- data[,"scaled_trial"] -  mean(data[,"scaled_trial"], na.rm=T) # center around mean (omitted because undone by rescaling)
 
 # Bring to range between -1 and 1 such that coefficients are comparable between fixed effects
 data[,"scaled_trial"] <- scales::rescale(data[,"scaled_trial"], to = c(-1, 1))
 
 print(mean(data[,"scaled_trial"], na.rm=T))
-hist(data[,"scaled_trial"], main=paste0("Centered and\n Rescaled to [-1,1]"), xlim=c(-1,1), ylim=c(0,8000), breaks=10, xlab="Scaled Trial")
+hist(data[,"scaled_trial"], main=paste0("Rescaled to [-1,1]"), xlim=c(-1,1), ylim=c(0,8000), breaks=10, xlab="Scaled Trial")
 
 data <- data.table::as.data.table(data) # convert to data table which seems to be more efficient
 
@@ -636,7 +636,7 @@ withCallingHandlers({
     } else {pe_coefficients[i, "singular"] <- 0}
     
     
-    # for decomposition of fixed effects contribution, ()
+    # for decomposition of fixed effects contribution, apply anova()
     anova <- anova(samplepoint_regression)
     
     # save p-value
@@ -770,7 +770,7 @@ withCallingHandlers({
     } else {pe_coefficients[i, "singular"] <- 0}
     
     
-    # for decomposition of fixed effects contribution, ()
+    # for decomposition of fixed effects contribution, apply anova()
     anova <- anova(samplepoint_regression)
     
     # save p-value
@@ -898,7 +898,7 @@ withCallingHandlers({
     } else {pe_coefficients[i, "singular"] <- 0}
     
     
-    # for decomposition of fixed effects contribution, ()
+    # for decomposition of fixed effects contribution, apply anova()
     anova <- anova(samplepoint_regression)
     
     # save p-value
@@ -1039,7 +1039,7 @@ for (p in 1:length(pe_variables)) {
       } else {pe_coefficients[i, "singular"] <- 0}
       
       
-      # for decomposition of fixed effects contribution, ()
+      # for decomposition of fixed effects contribution, apply anova()
       anova <- anova(samplepoint_regression)
       
       # save p-values
@@ -1229,7 +1229,7 @@ for (p in 1:length(pe_variables)) {
         pe_coefficients[i, "singular"] <- 1
       } else {pe_coefficients[i, "singular"] <- 0}
       
-      # for decomposition of fixed effects contribution, ()
+      # for decomposition of fixed effects contribution, apply anova()
       anova <- anova(samplepoint_regression)
       
       # save p-values
