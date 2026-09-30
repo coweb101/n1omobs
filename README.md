@@ -2,7 +2,7 @@
 
 This repository stores scripts used to aggregate and analyze the EEG data, and plot the results for the manuscript "Sound omission-related potentials following observed actions versus visual cues" (Weber et al., In Preparation).
 
-The EEG data was preprocessed in BrainVision Analyzer beforehand (for details, see Methods section of the paper). All further operations and analyses were conducted in R (version 4.0.3) and RStudio (version 1.4.1106), using the following packages: data.table, plyr, scales, lme4, lmerTest, emmeans, effectsize, viridis, yarrr).
+The EEG data was preprocessed in BrainVision Analyzer beforehand (for details, see Methods section of the paper). All further operations and analyses were conducted in R (version 4.0.3) and RStudio (version 1.4.1106), using the following packages: data.table, plyr, scales, lme4, lmerTest, emmeans, effectsize, viridis, yarrr.
 
 **To fully reproduce all analyses:**
 
