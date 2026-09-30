@@ -636,7 +636,7 @@ withCallingHandlers({
     } else {pe_coefficients[i, "singular"] <- 0}
     
     
-    # for decomposition of fixed effects contribution (cf. marta), apply anova()
+    # for decomposition of fixed effects contribution, ()
     anova <- anova(samplepoint_regression)
     
     # save p-value
@@ -770,7 +770,7 @@ withCallingHandlers({
     } else {pe_coefficients[i, "singular"] <- 0}
     
     
-    # for decomposition of fixed effects contribution (cf. marta), apply anova()
+    # for decomposition of fixed effects contribution, ()
     anova <- anova(samplepoint_regression)
     
     # save p-value
@@ -898,7 +898,7 @@ withCallingHandlers({
     } else {pe_coefficients[i, "singular"] <- 0}
     
     
-    # for decomposition of fixed effects contribution (cf. marta), apply anova()
+    # for decomposition of fixed effects contribution, ()
     anova <- anova(samplepoint_regression)
     
     # save p-value
@@ -1039,7 +1039,7 @@ for (p in 1:length(pe_variables)) {
       } else {pe_coefficients[i, "singular"] <- 0}
       
       
-      # for decomposition of fixed effects contribution (cf. marta), apply anova()
+      # for decomposition of fixed effects contribution, ()
       anova <- anova(samplepoint_regression)
       
       # save p-values
@@ -1229,7 +1229,7 @@ for (p in 1:length(pe_variables)) {
         pe_coefficients[i, "singular"] <- 1
       } else {pe_coefficients[i, "singular"] <- 0}
       
-      # for decomposition of fixed effects contribution (cf. marta), apply anova()
+      # for decomposition of fixed effects contribution, ()
       anova <- anova(samplepoint_regression)
       
       # save p-values
@@ -1414,7 +1414,7 @@ for (p in 1:length(pe_variables)) {
         pe_coefficients[i, "singular"] <- 1
       } else {pe_coefficients[i, "singular"] <- 0}
       
-      # for decomposition of fixed effects contribution (cf. marta), apply anova()
+      # for decomposition of fixed effects contribution, apply anova()
       anova <- anova(samplepoint_regression)
       
       # save p-values
