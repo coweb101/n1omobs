@@ -117,7 +117,7 @@ plot_window_allpoints <- function(dat, t1, t2, panel_title, yaxis_label) {
 
 ## Frontocentral time windows (four plots) ####
 
-# within the following sample points: 56 to 68, 80 to 91, 97 to 107, 111 to 120
+# within the following sample points: 56 to 68, 80 to 91, 97 to 108, 111 to 120
 
 # -280 to -232 ms
 plot_window_allpoints(pe_coefficients_frontocentral, 56, 68, paste0(samplepoint_to_ms(56), " to ", samplepoint_to_ms(68), " ms"), expression("estimated amplitude, " * mu * "V"))
@@ -126,7 +126,7 @@ plot_window_allpoints(pe_coefficients_frontocentral, 56, 68, paste0(samplepoint_
 plot_window_allpoints(pe_coefficients_frontocentral, 80, 91, paste0(samplepoint_to_ms(80), " to ", samplepoint_to_ms(91), " ms"), "")
 
 # -116 to -76 ms
-plot_window_allpoints(pe_coefficients_frontocentral,  97, 107,  paste0(samplepoint_to_ms(97), " to ", samplepoint_to_ms(107), " ms"),"")
+plot_window_allpoints(pe_coefficients_frontocentral,  97, 108,  paste0(samplepoint_to_ms(97), " to ", samplepoint_to_ms(108), " ms"),"")
 
 # -60 to -24 ms
 plot_window_allpoints(pe_coefficients_frontocentral,  111, 120,  paste0(samplepoint_to_ms(111), " to ", samplepoint_to_ms(120), " ms"), expression("estimated amplitude, " * mu * "V")

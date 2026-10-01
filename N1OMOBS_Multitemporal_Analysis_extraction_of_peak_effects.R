@@ -43,10 +43,10 @@ significanteffect_interaction <- fiveinarow_filter(significanteffect_interaction
 
 diff(significanteffect_basis) # 4 time windows
 significanteffect_basis*4-504
-# significant time windows between -280 and -232, -184 and -140, -116 and -76, -60 and -24 ms (all before omission onset)
+# significant time windows between -280 and -232, -184 and -140, -116 and -72, -60 and -24 ms (all before omission onset)
 
 
-split(significanteffect_basis, cumsum(c(TRUE, diff(significanteffect_basis) != 1))) # 56 to 68, 80 to 91, 97 to 107, 111 to 120
+split(significanteffect_basis, cumsum(c(TRUE, diff(significanteffect_basis) != 1))) # 56 to 68, 80 to 91, 97 to 108, 111 to 120
 
 pe_coefficients$coef_condition[significanteffect_basis]  # first coefficients are positive, later negative
 
