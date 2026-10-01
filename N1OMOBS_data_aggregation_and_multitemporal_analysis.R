@@ -515,7 +515,7 @@ data <- as.data.frame(data) # ensure that data is a data frame (and not a list)
 data$condition_model <- ifelse(data$condition=="amc_notone_corr", -1,
                                ifelse(data$condition=="avc_notone_corr", 1, NA))
 
-## Logtransform and median-center PE variables (because of left-skewed distribution)
+## Logtransform and median-center PE variables
 pe_variables <- paste0("pe_", alpha_range)
 
 # create plot to examine distributions
