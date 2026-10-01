@@ -117,23 +117,6 @@ round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficie
 round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficients$coef_interaction)),
                       c("coef_interaction", "se_interaction", "df_interaction", "t_interaction" , "p_interaction", "effectsize_interaction")],2)
 
-
-# and values separately for ao and cue
-pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficients$coef_interaction)),
-                c("coef_amc", "se_amc", "p_amc")]
-round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficients$coef_interaction)),
-                      c("coef_amc", "se_amc", "p_amc")],3)
-round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficients$coef_interaction)),
-                      c("coef_amc", "se_amc", "p_amc")],2)
-
-pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficients$coef_interaction)),
-                c("coef_avc", "se_avc", "p_avc")]
-round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficients$coef_interaction)),
-                      c("coef_avc", "se_avc", "p_avc")],3)
-round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficients$coef_interaction)),
-                      c("coef_avc", "se_avc", "p_avc")],2)
-
-
 ## Follow-up tests against zero ####
 
 significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc < .05) # follow-up tests only checked for p < .05
@@ -233,7 +216,6 @@ round(pe_coefficients[which(pe_coefficients$coef_pe == max(pe_coefficients$coef_
 ## Interaction ####
 
 pe_coefficients$coef_interaction
-# most coefficients are negative (2 positive)
 
 # look for absolute largest effect
 which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction)))
@@ -247,24 +229,13 @@ round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_
 round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction))), c("coef_interaction", "se_interaction", "df_interaction", "t_interaction" , "p_interaction", "effectsize_interaction")],2)
 
 
-# and values separately for ao and cue
-pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction))), c("coef_amc", "se_amc", "p_amc")]
-round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction))), c("coef_amc", "se_amc", "p_amc")],3)
-round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction))), c("coef_amc", "se_amc", "p_amc")],2)
-
-pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction))), c("coef_avc", "se_avc", "p_avc")]
-round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction))), c("coef_avc", "se_avc", "p_avc")],3)
-round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_coefficients$coef_interaction))), c("coef_avc", "se_avc", "p_avc")],2)
-
-
-
 ## Follow-up tests against zero ####
 significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc < .05)
 significanteffect_diff_zero_amc*4-504
 split(significanteffect_diff_zero_amc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_amc) != 1)))
-# 5 time windows: 0 to 40, 64 to 84, 100 to 104, 112 to 116 and at 176 ms
+# 5 time windows: 0 to 40, 64 to 84, 96 to 104, 112 to 116 and at 176 ms
 
 significanteffect_diff_zero_avc <- which(pe_coefficients$emmean_p_avc < .05)
 significanteffect_diff_zero_avc*4-504
 split(significanteffect_diff_zero_avc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_avc) != 1)))
-# 6 time windows/points: at -20, at 0, between 12 to 68, 84 to 144, 180 to 232, 320 to 324 ms
+# 4 time windows/points: between 12 to 68, 84 to 144, 180 to 232, 320 to 324 ms
