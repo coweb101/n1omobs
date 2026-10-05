@@ -746,6 +746,11 @@ withCallingHandlers({
     # ensure that amplitude data is numeric
     data_temp$samplepointx <- as.numeric(data_temp$samplepointx)
     
+    # for temporal clusters only so that intercept represents grand mean across
+    # electrodes
+    data_temp$electrode <- factor(data_temp$electrode)
+    contrasts(data_temp$electrode) <- contr.sum(2)
+    
     pe_coefficients[i, "convergence_false"] <- 0
     pe_coefficients[i, "convergence_false_message"] <- ""
     # I enter a default value which is overwritten when a warning is caught with
@@ -875,6 +880,11 @@ withCallingHandlers({
     
     # ensure that amplitude data is numeric
     data_temp$samplepointx <- as.numeric(data_temp$samplepointx)
+    
+    # for temporal clusters only so that intercept represents grand mean across
+    # electrodes
+    data_temp$electrode <- factor(data_temp$electrode)
+    contrasts(data_temp$electrode) <- contr.sum(2)
     
     pe_coefficients[i, "convergence_false"] <- 0
     pe_coefficients[i, "convergence_false_message"] <- ""
@@ -1084,7 +1094,8 @@ for (p in 1:length(pe_variables)) {
                                   var="condition_model",
                                   infer=TRUE,
                                   adj="none",
-                                  lmer.df="asymp")
+                                  lmer.df="asymp",
+                                  at = list(pe_absolute = 0))
       
       # extract simple effects
       emmeans_simple <- as.data.frame(summary(emmeans)$emmeans)
@@ -1208,6 +1219,11 @@ for (p in 1:length(pe_variables)) {
       # ensure that amplitude data is numeric
       data_temp$samplepointx <- as.numeric(data_temp$samplepointx)
       
+      # for temporal clusters only so that intercept represents grand mean across
+      # electrodes
+      data_temp$electrode <- factor(data_temp$electrode)
+      contrasts(data_temp$electrode) <- contr.sum(2)
+      
       pe_coefficients[i, "convergence_false"] <- 0
       pe_coefficients[i, "convergence_false_message"] <- ""
       # I enter a default value which is overwritten when a warning is caught with
@@ -1273,7 +1289,8 @@ for (p in 1:length(pe_variables)) {
                                   var="condition_model",
                                   infer=TRUE,
                                   adj="none",
-                                  lmer.df="asymp")
+                                  lmer.df="asymp",
+                                  at = list(pe_absolute = 0))
       
       
       # extract simple effects
@@ -1393,6 +1410,11 @@ for (p in 1:length(pe_variables)) {
       # ensure that amplitude data is numeric
       data_temp$samplepointx <- as.numeric(data_temp$samplepointx)
       
+      # for temporal clusters only so that intercept represents grand mean across
+      # electrodes
+      data_temp$electrode <- factor(data_temp$electrode)
+      contrasts(data_temp$electrode) <- contr.sum(2)
+      
       pe_coefficients[i, "convergence_false"] <- 0
       pe_coefficients[i, "convergence_false_message"] <- ""
       # I enter a default value which is overwritten when a warning is caught with
@@ -1459,7 +1481,8 @@ for (p in 1:length(pe_variables)) {
                                   var="condition_model",
                                   infer=TRUE,
                                   adj="none",
-                                  lmer.df="asymp")
+                                  lmer.df="asymp",
+                                  at = list(pe_absolute = 0))
       
       
       # extract simple effects
