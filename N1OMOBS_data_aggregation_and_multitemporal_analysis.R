@@ -81,7 +81,7 @@ erp_data <- lapply(datfiles, function(x) {
   
   ### subset to relevant marker
   mrk <- mrk[grep("Mk[0-9]+=Stimulus",mrk[,1]),] # keep only stimuli rows
-  mrk <- mrk[-grep("S",mrk[,2]),] # delete all marker referring to cue onset (that still have an "S" before their code)
+  mrk <- mrk[!grep("S",mrk[,2]),] # delete all marker referring to cue onset (that still have an "S" before their code)
   stim <- as.numeric(mrk[,2])
 
   ### read the respective datfile (amplitude data) 
@@ -531,7 +531,7 @@ for (i in 1:length(pe_variables)){
   # median-centered absolute PE (because of skewed distribution)
   data[,paste0("abs_centered_", current_pe)] <- abs(data[,current_pe]) # take absolute value
   data[,paste0("abs_centered_", current_pe)] <- log(data[,paste0("abs_centered_", current_pe)])
-  data[,paste0("abs_centered_", current_pe)] <- data[,paste0("abs_centered_", current_pe)] - median(data[,paste0("abs_centered_", current_pe)])
+  data[,paste0("abs_centered_", current_pe)] <- data[,paste0("abs_centered_", current_pe)] - median(data[,paste0("abs_centered_", current_pe)], na.rm=TRUE)
 
   print(mean(data[,paste0("abs_centered_", current_pe)], na.rm=T))
   hist(data[,paste0("abs_centered_", current_pe)], main=paste0("Log-transformed and\n Median-centered"), xlim=c(-1,1), ylim=c(0,8000), breaks=10, xlab="Absolute PE")
@@ -982,7 +982,6 @@ library(lmerTest) # generates p-values and automatically loads lme4
 
 electrodes <- c("F3", "Fz", "F4", "FC3", "FCz", "FC4", "C3", "Cz", "C4") # frontocentral cluster 
 segment_length <- 275  # at how many sample points the model should be conducted
-pe_coefficients <- data.frame() # set up empty data frame to save coefficients
 
 ## The following loop fits the same lmm with amplitudes of each of the
 ## samplepoints and saves relevant statistics
@@ -999,6 +998,8 @@ pe_variables <- paste0("abs_centered_pe_", alpha_range)
 pe_variables <- c(pe_variables, "scaled_trial")
 
 for (p in 1:length(pe_variables)) {
+  
+  pe_coefficients <- data.frame() # set up empty data frame to save coefficients
   
   current_pe <- pe_variables[p]
   data$pe_absolute <- data[,..current_pe]#
@@ -1173,7 +1174,6 @@ library(lmerTest) # generates p-values and automatically loads lme4
 
 electrodes <- c("FT8", "T8") # right temporal cluster
 segment_length <- 275  # at how many sample points the model should be conducted
-pe_coefficients <- data.frame() # set up empty data frame to save coefficients
 
 ## The following loop fits the same lmm with amplitudes of each of the 
 ## samplepoints and saves relevant statistics
@@ -1190,6 +1190,8 @@ pe_variables <- paste0("abs_centered_pe_", alpha_range)
 pe_variables <- c(pe_variables, "scaled_trial")
 
 for (p in 1:length(pe_variables)) {
+  
+  pe_coefficients <- data.frame() # set up empty data frame to save coefficients
   
   current_pe <- pe_variables[p]
   data$pe_absolute <- data[,..current_pe]
@@ -1364,7 +1366,6 @@ library(lmerTest) # generates p-values and automatically loads lme4
 ## Insert relevant information:
 electrodes <- c("FT7", "T7") # left temporal cluster
 segment_length <- 275  # at how many sample points the model should be conducted
-pe_coefficients <- data.frame() # set up empty data frame to save coefficients
 
 ## The following loop fits the same lmm with amplitudes of each of the
 ## samplepoints and saves relevant statistics
@@ -1381,6 +1382,8 @@ pe_variables <- paste0("abs_centered_pe_", alpha_range)
 pe_variables <- c(pe_variables, "scaled_trial")
 
 for (p in 1:length(pe_variables)) {
+  
+  pe_coefficients <- data.frame() # set up empty data frame to save coefficients
   
   current_pe <- pe_variables[p]
   data$pe_absolute <- data[,..current_pe]#
