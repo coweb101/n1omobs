@@ -81,7 +81,7 @@ erp_data <- lapply(datfiles, function(x) {
   
   ### subset to relevant marker
   mrk <- mrk[grep("Mk[0-9]+=Stimulus",mrk[,1]),] # keep only stimuli rows
-  mrk <- mrk[!grep("S",mrk[,2]),] # delete all marker referring to cue onset (that still have an "S" before their code)
+  mrk <- mrk[!grepl("S",mrk[,2]),] # delete all marker referring to cue onset (that still have an "S" before their code)
   stim <- as.numeric(mrk[,2])
 
   ### read the respective datfile (amplitude data) 
