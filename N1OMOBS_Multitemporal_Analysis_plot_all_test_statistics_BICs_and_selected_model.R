@@ -67,7 +67,7 @@ b=1 # start counter to insert bic values in separate rows
 ## Loop to create plots ####
 ## Loop through result files (of the analysis without single trial PEs and all 
 ## analyses including the PEs (created with different learning rates) and create
-## for each a plot with all four electrode clusters (effects and GAs)
+## for each a plot with all three electrode clusters (effects and GAs)
 
 for (p in 1:length(pe_list)){
   

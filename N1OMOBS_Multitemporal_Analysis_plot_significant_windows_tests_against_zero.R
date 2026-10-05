@@ -125,7 +125,7 @@ plot_window_allpoints(pe_coefficients_frontocentral, 56, 68, paste0(samplepoint_
 # -184 to -140 ms
 plot_window_allpoints(pe_coefficients_frontocentral, 80, 91, paste0(samplepoint_to_ms(80), " to ", samplepoint_to_ms(91), " ms"), "")
 
-# -116 to -76 ms
+# -116 to -72 ms
 plot_window_allpoints(pe_coefficients_frontocentral,  97, 108,  paste0(samplepoint_to_ms(97), " to ", samplepoint_to_ms(108), " ms"),"")
 
 # -60 to -24 ms

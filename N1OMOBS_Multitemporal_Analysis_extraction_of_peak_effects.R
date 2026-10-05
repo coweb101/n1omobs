@@ -132,7 +132,7 @@ diff(significanteffect_diff_zero_avc)
 significanteffect_diff_zero_avc*4-504
 
 split(significanteffect_diff_zero_avc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_avc) != 1)))
-# 7 time windows between -428 to -424, -368 to -364, -320, -276 to -260, -176 to -164, -108 to -96, 184 to 588 ms
+# 7 time windows between -428 to -420, -368 to -364, -320, -276 to -260, -176 to -164, -108 to -96, 184 to 588 ms
 
 #### Left Temporal Cluster ####
 
