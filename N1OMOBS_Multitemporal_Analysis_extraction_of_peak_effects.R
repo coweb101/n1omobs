@@ -124,7 +124,7 @@ diff(significanteffect_diff_zero_amc)
 significanteffect_diff_zero_amc*4-504
 
 split(significanteffect_diff_zero_amc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_amc) != 1)))
-# 8 time windows between -460 to -420, -320 to -296, -104 to -96, -56 to -44, -36 to -8, 100 to 104, 128 to 132, 168 to 596 ms
+# 7 separate time points/windows
 
 
 significanteffect_diff_zero_avc <- which(pe_coefficients$emmean_p_avc < .05)
@@ -132,7 +132,7 @@ diff(significanteffect_diff_zero_avc)
 significanteffect_diff_zero_avc*4-504
 
 split(significanteffect_diff_zero_avc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_avc) != 1)))
-# 7 time windows between -428 to -420, -368 to -364, -320, -276 to -260, -176 to -164, -108 to -96, 184 to 588 ms
+# 7 separate time points/windows
 
 #### Left Temporal Cluster ####
 
@@ -233,9 +233,9 @@ round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_
 significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc < .05)
 significanteffect_diff_zero_amc*4-504
 split(significanteffect_diff_zero_amc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_amc) != 1)))
-# 5 time windows: 0 to 40, 64 to 84, 96 to 104, 112 to 116 and at 176 ms
+# 2 time points/windows
 
 significanteffect_diff_zero_avc <- which(pe_coefficients$emmean_p_avc < .05)
 significanteffect_diff_zero_avc*4-504
 split(significanteffect_diff_zero_avc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_avc) != 1)))
-# 4 time windows/points: between 12 to 68, 84 to 144, 180 to 232, 320 to 324 ms
+# 4 time windows/points
