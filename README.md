@@ -24,3 +24,18 @@ The three anonymized data sets that were saved within the pipeline `N1OMOBS_data
 **To reproduce plots:**
 
 To recreate plots showing model results only (Fig. 5, Fig. S4, and Fig. 3 by running only section II of `…plot_all_test_statistics_BICs_and_selected_model.R`), the data files in the folder aggregated_data here suffice (model results from multitemporal analyses with one CSV per cluster and model). For recreating plots showing additionally the data underlying analyses (e.g. grand averages), the additional data sets (see step 3 in previous paragraph) have to be downloaded and placed within the "aggregated_data" folder. For both, first create a subfolder "plots" within your wd and replace setwd() commands (see step 2 and 4 above).
+
+**Scripts and figures**
+
+| Script | Output |
+|---|---|
+| `N1OMOBS_data_aggregation_and_multitemporal_analysis.R` | Data sets 1–3 and all model-result CSVs in `aggregated_data` |
+| `N1OMOBS_Plot_Expectation_Values.R` | Fig. 2 |
+| `N1OMOBS_Multitemporal_Analysis_plot_all_test_statistics_BICs_and_selected_model.R` | Section II: Fig. 3 · Section III: Fig. 4 · Section IV: Fig. S3 |
+| `N1OMOBS_Multitemporal_Analysis_plot_significant_windows_tests_against_zero.R` | Fig. 5 |
+| `N1OMOBS_Plot_GrandAverages_Before_Correction.R` | Fig. S1 |
+| `N1OMOBS_Multitemporal_Analysis_plot_supplemental_figure_emmeans.R` | Fig. S4 |
+| `N1OMOBS_Multitemporal_Analysis_extraction_of_peak_effects.R` | Peak statistics reported in the text |
+
+
+Note: the peak-extraction script and the significant-windows plot hard-code the selected models (learning rate 0.01 for the frontocentral cluster, the model without PE for the left temporal cluster, learning rate 0.034 for the right temporal cluster) and the significant time windows. If you re-run the analysis and obtain different results, update these values.
