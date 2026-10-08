@@ -17,7 +17,7 @@ The three anonymized data sets that were saved within the pipeline `N1OMOBS_data
 2) Replace the hardcoded wd commands within each script with your individual wd or a relative path,
 3) Download the data sets from OSF (see above) and place these in the subfolder "aggregated_data",
 4) Create a subfolder "plots" in your wd, 
-5) Run N1OMOBS_data_aggregation_and_multitemporal_analysis.R first, starting at section III ("Add PE"). Sections I and II read and aggregate the raw data files, which are not public, and are included for transparency only. Sections III onward take approximately 30 hours with 64 GB RAM,
+5) Run N1OMOBS_data_aggregation_and_multitemporal_analysis.R first, starting from the block "Clear workspace in between to ensure reproducibility with anonymized data set" directly before section III ("Add PE"). Sections I and II read and aggregate the raw data files, which are not public, and are included for transparency only. Sections III onward take approximately 30 hours with 64 GB RAM,
 6) Run the plotting scripts and the peak-extraction script in any order. Within the script `…plot_all_test_statistics_BICs_and_selected_model.R`, run the sections in order, because sections III and IV use the selected models determined in section II.
 
 
