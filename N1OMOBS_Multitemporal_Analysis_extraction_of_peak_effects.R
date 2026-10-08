@@ -238,4 +238,4 @@ split(significanteffect_diff_zero_amc*4-504, cumsum(c(TRUE, diff(significanteffe
 significanteffect_diff_zero_avc <- which(pe_coefficients$emmean_p_avc < .05)
 significanteffect_diff_zero_avc*4-504
 split(significanteffect_diff_zero_avc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_avc) != 1)))
-# 4 time windows/points
+# 5 time windows/points
