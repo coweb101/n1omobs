@@ -1,6 +1,6 @@
 #### N1OMOBS: plotting estimated marginal means and tests against zero in time windows with significant differences between action observation and cue 
 
-## CW, last modified 09/2026
+## CW, last modified 11/2026
 
 ## Routine #####
 
@@ -10,6 +10,21 @@ setwd("//psychologie.ad.hhu.de/biopsych_experimente/Studien_Daten/2024_CW_N1OMOB
 ## Read data ####
 pe_coefficients_frontocentral <- data.table::fread("aggregated_data/multitemp_pre500_post600_frontocentral_cluster_pe_0.01_no_baseline.csv",quote = "")
 pe_coefficients_left_temporal <- data.table::fread("aggregated_data/multitemp_pre500_post600_left_temporal_cluster_corrected_data_no_baseline.csv", quote = "")
+
+## Bonferroni adjustment for the number of time windows within each cluster ####
+# (as in the sensitivity analysis)
+# (frontocentral cluster: 4 time windows, left temporal cluster: 2 time windows;
+#  p-values are multiplied by the number of time windows and limited to 1)
+n_windows_frontocentral <- 4
+n_windows_left_temporal <- 2
+
+pe_coefficients_frontocentral$p_intercept_bonferroni <- pmin(1, pe_coefficients_frontocentral$p_intercept*n_windows_frontocentral)
+pe_coefficients_frontocentral$emmean_p_amc_bonferroni <- pmin(1, pe_coefficients_frontocentral$emmean_p_amc*n_windows_frontocentral)
+pe_coefficients_frontocentral$emmean_p_avc_bonferroni <- pmin(1, pe_coefficients_frontocentral$emmean_p_avc*n_windows_frontocentral)
+
+pe_coefficients_left_temporal$p_intercept_bonferroni <- pmin(1, pe_coefficients_left_temporal$p_intercept*n_windows_left_temporal)
+pe_coefficients_left_temporal$emmean_p_amc_bonferroni <- pmin(1, pe_coefficients_left_temporal$emmean_p_amc*n_windows_left_temporal)
+pe_coefficients_left_temporal$emmean_p_avc_bonferroni <- pmin(1, pe_coefficients_left_temporal$emmean_p_avc*n_windows_left_temporal)
 
 ## Open plot ####
 png(filename = paste0("plots/multitemp_results_selected_time_windows_allpoints_", Sys.Date(), ".png"),
@@ -40,16 +55,15 @@ plot_window_allpoints <- function(dat, t1, t2, panel_title, yaxis_label) {
   # extract data from relevant samplepoints
   y_int  <- dat$coef_intercept[rows]
   se_int <- dat$se_intercept[rows]
-  p_int  <- dat$p_intercept[rows]
+  p_int  <- dat$p_intercept_bonferroni[rows]
   
   y_amc  <- dat$emmean_amc[rows]
   se_amc <- dat$emmean_se_amc[rows]
-  p_amc  <- dat$emmean_p_amc[rows]
+  p_amc  <- dat$emmean_p_amc_bonferroni[rows]
   
   y_avc  <- dat$emmean_avc[rows]
   se_avc <- dat$emmean_se_avc[rows]
-  p_avc  <- dat$emmean_p_avc[rows]
-  
+  p_avc  <- dat$emmean_p_avc_bonferroni[rows]
   
   # define colors and create vector depending on significance
   cols <- c("black", "purple3", "blue") # intercept, amc, avc
@@ -92,9 +106,10 @@ plot_window_allpoints <- function(dat, t1, t2, panel_title, yaxis_label) {
   points(x_base[3], mean(y_avc, na.rm = TRUE), pch = 21, bg = "white", col = cols[3], cex = 1.8, lwd = 1.3)
   
   # create significance labels
-  lab_int <- paste0(sum(p_int < .05, na.rm = TRUE), "/", sum(!is.na(p_int)), " p < .05")
-  lab_amc <- paste0(sum(p_amc < .05, na.rm = TRUE), "/", sum(!is.na(p_amc)), " p < .05")
-  lab_avc <- paste0(sum(p_avc < .05, na.rm = TRUE), "/", sum(!is.na(p_avc)), " p < .05")
+  # (bquote creates a plotmath expression: italic p with subscript "Bonf")
+  lab_int <- bquote(.(paste0(sum(p_int < .05, na.rm = TRUE), "/", sum(!is.na(p_int)))) ~ italic(p)[Bonf] < ".05")
+  lab_amc <- bquote(.(paste0(sum(p_amc < .05, na.rm = TRUE), "/", sum(!is.na(p_amc)))) ~ italic(p)[Bonf] < ".05")
+  lab_avc <- bquote(.(paste0(sum(p_avc < .05, na.rm = TRUE), "/", sum(!is.na(p_avc)))) ~ italic(p)[Bonf] < ".05")
 
   # define position of labels (above or below points depending on mean sign)
   y_lab_int <- if (mean(y_int, na.rm = TRUE) > 0) min(y_int - se_int, na.rm = TRUE) - 0.14 else max(y_int + se_int, na.rm = TRUE) + 0.14
