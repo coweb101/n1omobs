@@ -59,11 +59,11 @@ which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[signi
 
 # get relevant info
 pe_coefficients[which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis])),
-                c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")]
+                c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition", "emmean_diff")]
 round(pe_coefficients[which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis])),
-                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")],3)
+                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition", "emmean_diff")],3)
 round(pe_coefficients[which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis])),
-                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")],2)
+                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition", "emmean_diff")],2)
 
 # and then for the minimum
 which(pe_coefficients$coef_condition == min(pe_coefficients$coef_condition[significanteffect_basis]))
