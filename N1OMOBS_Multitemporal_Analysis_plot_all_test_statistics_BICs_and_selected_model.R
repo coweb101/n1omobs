@@ -560,6 +560,10 @@ for (p in 1:length(pe_list)){
     
     if (pe_p == 1){  # trial variable
       
+      # rescale trial numbers of the first participant to 1 to 1800 (as in the analysis pipeline)
+      id_to_rescale <- unique(data$id[data$trial_original > 1800])
+      index <- data$id %in% id_to_rescale
+      data$trial_original[index] <- scales::rescale(data$trial_original[index], to = c(1, 1800))
       pe_column_name <- "trial_original"
       data$pe_absolute <- data[,..pe_column_name]
       
@@ -1319,7 +1323,11 @@ for (c in 1:length(cluster_list)){ # loop through cluster
   
   if (pe_p == 1){  # trial variable
     
-    pe_column_name <- "trial_original"
+     # rescale trial numbers of the first participant to 1 to 1800 (as in the analysis pipeline)
+      id_to_rescale <- unique(data$id[data$trial_original > 1800])
+      index <- data$id %in% id_to_rescale
+      data$trial_original[index] <- scales::rescale(data$trial_original[index], to = c(1, 1800))
+      pe_column_name <- "trial_original"
     data$pe_absolute <- data[,..pe_column_name]
     
   }
@@ -2010,6 +2018,10 @@ for (c in 1:length(cluster_list)){ # loop through cluster
     
     if (pe_p == 1){  # trial variable
       
+      # rescale trial numbers of the first participant to 1 to 1800 (as in the analysis pipeline)
+      id_to_rescale <- unique(data$id[data$trial_original > 1800])
+      index <- data$id %in% id_to_rescale
+      data$trial_original[index] <- scales::rescale(data$trial_original[index], to = c(1, 1800))
       pe_column_name <- "trial_original"
       data$pe_absolute <- data[,..pe_column_name]
       
