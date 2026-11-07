@@ -26,7 +26,7 @@
 ## and are not available online. The respective sections within this script are 
 ## uploaded for transparency. The data was anonymized after reading the data and
 ## inserting empty lines for rejected segments such that everything from step 3 
-## (l. 310ff) on can be fully reproduced with the data file named
+## (l. 309ff) on can be fully reproduced with the data file named
 ## "bva_export_files_concatenated_500pre_600post_with_empty_artifact_rows_and_labels_no_baseline_anonym.csv"
 ## available via https://doi.org/10.17605/OSF.IO/3P96E
 
@@ -45,7 +45,6 @@ eegdatafolder <- "data/eeg/export"
 
 ## To have enough digits to round in the lmer objects, set global options
 options(width=500, scipen=6, digits=8)
-options("jtools-digits" = 3) # to display more digits in interactions package
 
 ##### I - Read eeg and marker data #####
 
