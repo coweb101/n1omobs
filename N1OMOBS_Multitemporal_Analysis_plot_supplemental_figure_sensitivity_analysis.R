@@ -1,7 +1,7 @@
 #### N1OMOBS: post hoc sensitivity analysis - main effects of Prediction Basis and tests against zero across model variants
 ## Table S2: main effects of Prediction Basis (all four model variants)
 ## Table S3: tests against zero of intercepts and estimated marginal means (all four model variants)
-## Figure S5, top row: coefficients of Prediction Basis (all four model variants; a = frontocentral, b = left temporal cluster)                two x positions (without/with baseline correction); symbols as in Figure S5 c
+## Figure S5, top row: coefficients of Prediction Basis (all four model variants; a = frontocentral, b = left temporal cluster)
 ## two x positions (without/with baseline correction); symbols as in the bottom row
 ## Figure S5, bottom row: tests against zero (all four model variants), saved as separate plot with the same width and
 ## column layout as the top row, so that both can be combined below each other
