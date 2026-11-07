@@ -44,27 +44,22 @@ data$condition_model <- ifelse(data$condition=="amc_notone_corr", -1,
 ## Logtransform and median-center PE variables
 pe_variables <- paste0("pe_", alpha_range)
 
-# create plot to examine distributions
-png(paste0("plots/pe_distributions_", as.character(Sys.Date()),".png"), width = 3.8, height = 15.2, units = "in", res = 2400)
-par(mfrow = c(length(pe_variables), 2), mai = c(0.5, 0.5, 0.5, 0.5), mgp = c(1.6, 0.35, 0), tcl = -0.25, cex = 0.8)
-
 for (i in 1:length(pe_variables)){
   
   current_pe <- pe_variables[i]
   
-  hist(abs(data[,current_pe]),  main=paste0("Raw (alpha = ", substr(current_pe, 4, 8), ")"), xlim=c(0,1), ylim=c(0,8000), breaks=10, xlab="Absolute PE")
+  #hist(abs(data[,current_pe]),  main=paste0("Raw (alpha = ", substr(current_pe, 4, 8), ")"), xlim=c(0,1), ylim=c(0,8000), breaks=10, xlab="Absolute PE")
   
   # median-centered absolute PE (because of skewed distribution)
   data[,paste0("abs_centered_", current_pe)] <- abs(data[,current_pe]) # take absolute value
   data[,paste0("abs_centered_", current_pe)] <- log(data[,paste0("abs_centered_", current_pe)])
   data[,paste0("abs_centered_", current_pe)] <- data[,paste0("abs_centered_", current_pe)] - median(data[,paste0("abs_centered_", current_pe)], na.rm=TRUE)
   
-  print(mean(data[,paste0("abs_centered_", current_pe)], na.rm=T))
-  hist(data[,paste0("abs_centered_", current_pe)], main=paste0("Log-transformed and\n Median-centered"), xlim=c(-1,1), ylim=c(0,8000), breaks=10, xlab="Absolute PE")
+  #print(mean(data[,paste0("abs_centered_", current_pe)], na.rm=T))
+  #hist(data[,paste0("abs_centered_", current_pe)], main=paste0("Log-transformed and\n Median-centered"), xlim=c(-1,1), ylim=c(0,8000), breaks=10, xlab="Absolute PE")
   
 }
 
-dev.off()
 
 ## Rescale trial variable
 

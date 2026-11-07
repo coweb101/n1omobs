@@ -67,11 +67,11 @@ plot_window_allpoints <- function(dat, t1, t2, panel_title, yaxis_label) {
   
   # define colors and create vector depending on significance
   cols <- c("black", "purple3", "blue") # intercept, amc, avc
-  cols_nonsig <- adjustcolor(cols, alpha.f = 0.45) # adjust colors for points of non-significance
+  cols_nonsig <- adjustcolor(cols, alpha.f = 0.25) # adjust colors for points of non-significance (lighter for stronger contrast)
   col_int <- ifelse(p_int < .05, cols[1], cols_nonsig[1])
   col_amc <- ifelse(p_amc < .05, cols[2], cols_nonsig[2])
   col_avc <- ifelse(p_avc < .05, cols[3], cols_nonsig[3])
-
+  
   # create empty plot
   plot(NA, xlim = c(0.5, 3.5), ylim = c(1,-1), xaxt = "n", yaxt = "n", xlab = "",
        ylab = yaxis_label, main = panel_title, bty = "n")
@@ -100,26 +100,26 @@ plot_window_allpoints <- function(dat, t1, t2, panel_title, yaxis_label) {
   points(x_amc, y_amc, pch = 16, col = col_amc, cex = 1.1)
   points(x_avc, y_avc, pch = 16, col = col_avc, cex = 1.1)
   
-  # and as last layer mean across depicted samplepoints
-  points(x_base[1], mean(y_int, na.rm = TRUE), pch = 21, bg = "white", col = cols[1], cex = 1.8, lwd = 1.3)
-  points(x_base[2], mean(y_amc, na.rm = TRUE), pch = 21, bg = "white", col = cols[2], cex = 1.8, lwd = 1.3)
-  points(x_base[3], mean(y_avc, na.rm = TRUE), pch = 21, bg = "white", col = cols[3], cex = 1.8, lwd = 1.3)
+  # and as last layer mean across depicted samplepoints (white diamond, to distinguish it from the point estimates)
+  points(x_base[1], mean(y_int, na.rm = TRUE), pch = 23, bg = "white", col = cols[1], cex = 1.7, lwd = 1.3)
+  points(x_base[2], mean(y_amc, na.rm = TRUE), pch = 23, bg = "white", col = cols[2], cex = 1.7, lwd = 1.3)
+  points(x_base[3], mean(y_avc, na.rm = TRUE), pch = 23, bg = "white", col = cols[3], cex = 1.7, lwd = 1.3)
   
   # create significance labels
   # (bquote creates a plotmath expression: italic p with subscript "Bonf")
   lab_int <- bquote(.(paste0(sum(p_int < .05, na.rm = TRUE), "/", sum(!is.na(p_int)))) ~ italic(p)[Bonf] < ".05")
   lab_amc <- bquote(.(paste0(sum(p_amc < .05, na.rm = TRUE), "/", sum(!is.na(p_amc)))) ~ italic(p)[Bonf] < ".05")
   lab_avc <- bquote(.(paste0(sum(p_avc < .05, na.rm = TRUE), "/", sum(!is.na(p_avc)))) ~ italic(p)[Bonf] < ".05")
-
+  
   # define position of labels (above or below points depending on mean sign)
   y_lab_int <- if (mean(y_int, na.rm = TRUE) > 0) min(y_int - se_int, na.rm = TRUE) - 0.14 else max(y_int + se_int, na.rm = TRUE) + 0.14
   y_lab_amc <- if (mean(y_amc, na.rm = TRUE) > 0) min(y_amc - se_amc, na.rm = TRUE) - 0.14 else max(y_amc + se_amc, na.rm = TRUE) + 0.14
   y_lab_avc <- if (mean(y_avc, na.rm = TRUE) > 0) min(y_avc - se_avc, na.rm = TRUE) - 0.14 else max(y_avc + se_avc, na.rm = TRUE) + 0.14
   
   # plot labels
-  text(x_base[1], y_lab_int, labels = lab_int, col = cols[1], cex = 1.4, xpd = NA)
-  text(x_base[2], y_lab_amc, labels = lab_amc, col = cols[2], cex = 1.4, xpd = NA)
-  text(x_base[3], y_lab_avc, labels = lab_avc, col = cols[3], cex = 1.4, xpd = NA)
+  text(x_base[1], y_lab_int, labels = lab_int, col = cols[1], cex = 1.25, xpd = NA)
+  text(x_base[2], y_lab_amc, labels = lab_amc, col = cols[2], cex = 1.25, xpd = NA)
+  text(x_base[3], y_lab_avc, labels = lab_avc, col = cols[3], cex = 1.25, xpd = NA)
   
   # axes
   axis(1, at = x_base, labels = c("Intercept", "Action", "Cue"), cex.axis = 1.6)
@@ -159,4 +159,3 @@ plot_window_allpoints(pe_coefficients_left_temporal, 257, 262, paste0(samplepoin
 
 ## Close plot ####
 dev.off() ## note: electrode labels added in powerpoint
-

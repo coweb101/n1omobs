@@ -82,7 +82,7 @@ samplepoint_to_ms <- function(samplepoint, start_ms = -500, step_ms = 4) {(sampl
 
 
 ## Open plot (Figure S5 a, b: coefficients of Prediction Basis, all model variants, cf. Table S2) ####
-png(filename = paste0("plots/sensitivity_prediction_basis_effect_selected_time_windows_two_x_positions_", Sys.Date(), ".png"),
+png(filename = paste0("plots/sensitivity_prediction_basis_effect_selected_time_windows_", Sys.Date(), ".png"),
     width = 15, height = 5, units = "in", res = 400)
 
 # all six plots in one row; outer margins for cluster labels (top) and legend (bottom)
