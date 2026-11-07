@@ -8,7 +8,7 @@
 rm(list=ls())
 getwd() # show current working directory
 setwd("\\\\psychologie.ad.hhu.de/biopsych_experimente/Studien_Daten/2024_CW_N1OMOBS")
-#### VI - Create plot with expectation values ####
+#### Create plot with expectation values ####
 
 library(viridis)
 data_pe <- data.table::fread("aggregated_data/bva_export_files_concatenated_500pre_600post_with_empty_artifact_rows_and_labels_and_pes_no_baseline_anonym.csv") # read data again
