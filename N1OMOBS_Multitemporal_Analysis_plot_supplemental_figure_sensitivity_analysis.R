@@ -1,10 +1,10 @@
 #### N1OMOBS: post hoc sensitivity analysis - main effects of Prediction Basis and tests against zero across model variants
 ## Table S2: main effects of Prediction Basis (all four model variants)
 ## Table S3: tests against zero of intercepts and estimated marginal means (all four model variants)
-## Figure S5 a, b: coefficients of Prediction Basis (all four model variants; a = frontocentral, b = left temporal cluster)
-##                 two x positions (without/with baseline correction); symbols as in Figure S5 c
-## Figure S5 c:    tests against zero (all four model variants), saved as separate plot with the same width and
-##                 column layout as Figure S5 a, b, so that both can be combined below each other
+## Figure S5, top row: coefficients of Prediction Basis (all four model variants; a = frontocentral, b = left temporal cluster)                two x positions (without/with baseline correction); symbols as in Figure S5 c
+## two x positions (without/with baseline correction); symbols as in the bottom row
+## Figure S5, bottom row: tests against zero (all four model variants), saved as separate plot with the same width and
+## column layout as the top row, so that both can be combined below each other
 
 ## CW, last modified 11/2026
 
@@ -81,7 +81,8 @@ variant_pch <- c(1, 16, 0, 15) # open = no baseline correction, filled = baselin
 samplepoint_to_ms <- function(samplepoint, start_ms = -500, step_ms = 4) {(samplepoint*step_ms + start_ms - step_ms)}
 
 
-## Open plot (Figure S5 a, b: coefficients of Prediction Basis, all model variants, cf. Table S2) ####
+## Open plot (Figure S5, top row: coefficients of Prediction Basis, all model variants, cf. Table S2) ####
+
 png(filename = paste0("plots/sensitivity_prediction_basis_effect_selected_time_windows_", Sys.Date(), ".png"),
     width = 15, height = 5, units = "in", res = 400)
 
@@ -92,7 +93,7 @@ png(filename = paste0("plots/sensitivity_prediction_basis_effect_selected_time_w
 par(mfrow = c(1, 6),  mai = c(0.7, 0.8, 0.4, 0),  mgp = c(3.6, 0.8, 0),  tcl = -0.25,  las = 1,  cex.axis = 1.6,  cex.lab = 1.9,  cex.main =2,
     oma = c(3, 0, 3, 0))
 
-## symbols for Figure S5 a, b: same as in Figure S5 c
+## symbols for the top row of Figure S5: same as in the bottom row
 ## (open = without, filled = with baseline correction; circle = random effects as in main analysis, square = additional random slope)
 variant_pch_s5 <- variant_pch
 
@@ -178,8 +179,7 @@ plot_window_effect <- function(dat, t1, t2, panel_title, yaxis_label, ylim_b, yt
   axis(2, at = yticks_b, pos = NA, labels = NA, tcl = par("tcl")/2, cex.axis = 1.6)
 }
 
-
-## Frontocentral time windows (four plots, Figure S5 a) ####
+## Frontocentral time windows (four plots, Figure S5 a, top row) ####
 
 # within the following sample points: 56 to 68, 80 to 91, 97 to 108, 111 to 120
 
@@ -195,7 +195,7 @@ plot_window_effect(sensitivity_frontocentral, 97, 108, paste0(samplepoint_to_ms(
 # -60 to -24 ms
 plot_window_effect(sensitivity_frontocentral, 111, 120, paste0(samplepoint_to_ms(111), " to ", samplepoint_to_ms(120), " ms"), "", ylim_frontocentral, yticks_frontocentral)
 
-## Left Temporal time windows (two plots, Figure S5 b) ####
+## Left Temporal time windows (two plots, Figure S5 b, top row) ####
 
 # within the following samplepoints: 245 to 253, 257 to 262
 
@@ -231,7 +231,7 @@ plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
 segments(x0 = x_fc[1], y0 = y_line, x1 = x_fc[2] - 0.01, y1 = y_line, lwd = 1.5)
 segments(x0 = x_lt[1], y0 = y_line, x1 = x_lt[2] - 0.01, y1 = y_line, lwd = 1.5)
 
-# legend for model variants (names as in Table S2; symbols in black, as in Figure S5 c) and singular fits
+# legend for model variants (names as in Table S2; symbols in black, as in the bottom row of Figure S5) and singular fits
 # (same order as in the plots: without baseline correction, then with baseline correction)
 legend("bottom",
        legend = c("Original (Main Analysis)", "Random Slope", "Baseline Correction", "Random Slope + Baseline Correction", "Singular-Fit"),
@@ -243,11 +243,11 @@ dev.off()
 
 
 
-## Open plot (Figure S5 c: tests against zero, all model variants, cf. Table S3) ####
+## Open plot (Figure S5, bottom row: tests against zero, all model variants, cf. Table S3) ####
 png(filename = paste0("plots/sensitivity_tests_against_zero_selected_time_windows_", Sys.Date(), ".png"),
     width = 15, height = 4.6, units = "in", res = 400)
 
-# all six plots in one row, same width and margins as Figure S5 a, b (so that the columns are aligned);
+# all six plots in one row, same width and margins as the top row of Figure S5 (so that the columns are aligned);
 # outer margins for cluster labels (top) and legend (bottom)
 par(mfrow = c(1, 6),  mai = c(0.25, 0.8, 0.4, 0),  mgp = c(3.6, 0.8, 0),  tcl = -0.25,  las = 1,  cex.axis = 1.6,  cex.lab = 1.9,  cex.main =2,
     oma = c(3, 0, 3, 0))
@@ -256,7 +256,7 @@ ylim_effects <- c(1,-1) # limits of y-axis (as in Figure 5)
 
 ## position of the four model variants relative to the position of each estimate
 # (order within each estimate: without baseline correction (original, random slope), then with baseline correction
-#  (baseline correction, random slope + baseline correction), as in Figure S5 a, b)
+#  (baseline correction, random slope + baseline correction), as in the top row of Figure S5)
 variant_offs <- c(-0.33, 0.11, -0.11, 0.33)
 
 ## custom plot function
@@ -329,7 +329,7 @@ plot_window_variants <- function(dat, t1, t2, panel_title, yaxis_label) {
     arrows(x0 = x_avc, y0 = y_avc - se_avc, x1 = x_avc, y1 = y_avc + se_avc,
            angle = 90, code = 3, length = 0.03, col = cols[3], xpd = TRUE)
     
-    # upon that, estimates (smaller symbols than in Figure S5 a, b because four variants are shown per estimate)
+    # upon that, estimates (smaller symbols than in the top row of Figure S5 because four variants are shown per estimate)
     points(x_int, y_int, pch = variant_pch[v], col = cols[1], cex = 1.2, lwd = 1.3)
     points(x_amc, y_amc, pch = variant_pch[v], col = cols[2], cex = 1.2, lwd = 1.3)
     points(x_avc, y_avc, pch = variant_pch[v], col = cols[3], cex = 1.2, lwd = 1.3)
@@ -390,7 +390,7 @@ plot_window_variants(sensitivity_left_temporal, 245, 253, paste0(samplepoint_to_
 plot_window_variants(sensitivity_left_temporal, 257, 262, paste0(samplepoint_to_ms(257), " to ", samplepoint_to_ms(262), " ms"), "")
 
 
-## Electrode cluster labels (above the plots, as in Figure S5 a, b) ####
+## Electrode cluster labels (above the plots, as in the top row of Figure S5) ####
 
 left_margin <- par("mai")[2]/par("din")[1]
 x_fc <- c(left_margin, 4/6) # frontocentral: plots 1 to 4
@@ -412,7 +412,7 @@ plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
 segments(x0 = x_fc[1], y0 = y_line, x1 = x_fc[2] - 0.01, y1 = y_line, lwd = 1.5)
 segments(x0 = x_lt[1], y0 = y_line, x1 = x_lt[2] - 0.01, y1 = y_line, lwd = 1.5)
 
-# legend for model variants (names as in Table S3; same legend as in Figure S5 a, b) and singular fits
+# legend for model variants (names as in Table S3; same legend as in the top row of Figure S5) and singular fits
 # (same order as in the plots: without baseline correction, then with baseline correction)
 legend("bottom",
        legend = c("Original (Main Analysis)", "Random Slope", "Baseline Correction", "Random Slope + Baseline Correction", "Singular-Fit"),
