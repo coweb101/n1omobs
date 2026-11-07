@@ -584,7 +584,7 @@ pe_coefficients <- data.frame() # set up empty data frame to save coefficients
 ## The following loop fits the same lmm with amplitudes of each of the
 ## samplepoints and saves relevant statistics
 
-# withCallingHandlers is wrapped around the for-loop to save non-convergence 
+# withCallingHandlers is wrapped around the for-loop to save (non-convergence)
 # warnings from lmer (which is not possible with warninigs() inside of the loop)
 
 set.seed(17) # for reproducibility
@@ -716,7 +716,7 @@ pe_coefficients <- data.frame() # set up empty data frame to save coefficients
 ## The following loop fits the same lmm with amplitudes of each of the 
 ## samplepoints and saves relevant statistics
 
-# withCallingHandlers is wrapped around the for-loop to save non-convergence 
+# withCallingHandlers is wrapped around the for-loop to save (non-convergence) 
 # warnings from lmer (which is not possible with warninigs() inside of the loop)
 
 set.seed(17) # for reproducibility
@@ -851,7 +851,7 @@ pe_coefficients <- data.frame() # set up empty data frame to save coefficients
 ## The following loop fits the same lmm with amplitudes of each of the
 ## samplepoints and saves relevant statistics
 
-# withCallingHandlers is wrapped around the for-loop to save non-convergence 
+# withCallingHandlers is wrapped around the for-loop to save (non-convergence)
 # warnings from lmer (which is not possible with warninigs() inside of the loop)
 
 set.seed(17) # for reproducibility
@@ -986,7 +986,7 @@ segment_length <- 275  # at how many sample points the model should be conducted
 ## The following loop fits the same lmm with amplitudes of each of the
 ## samplepoints and saves relevant statistics
 
-# withCallingHandlers is wrapped around the for-loop to save non-convergence 
+# withCallingHandlers is wrapped around the for-loop to save (non-convergence)
 # warnings from lmer (which is not possible with warninigs() inside of the loop)
 
 set.seed(17) # for reproducibility
@@ -1178,7 +1178,7 @@ segment_length <- 275  # at how many sample points the model should be conducted
 ## The following loop fits the same lmm with amplitudes of each of the 
 ## samplepoints and saves relevant statistics
 
-# withCallingHandlers is wrapped around the for-loop to save non-convergence 
+# withCallingHandlers is wrapped around the for-loop to save (non-convergence)
 # warnings from lmer (which is not possible with warninigs() inside of the loop)
 
 set.seed(17) # for reproducibility
@@ -1370,7 +1370,7 @@ segment_length <- 275  # at how many sample points the model should be conducted
 ## The following loop fits the same lmm with amplitudes of each of the
 ## samplepoints and saves relevant statistics
 
-# withCallingHandlers is wrapped around the for-loop to save non-convergence 
+# withCallingHandlers is wrapped around the for-loop to save (non-convergence)
 # warnings from lmer (which is not possible with warninigs() inside of the loop)
 
 set.seed(17) # for reproducibility
