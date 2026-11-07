@@ -1,6 +1,6 @@
 #### N1OMOBS Extracting Significant Time Windows and more info for Peak Effects ####
 
-### CW, last modified 09/2026
+### CW, last modified 11/2026
 
 ## Routine #####
 
@@ -49,7 +49,8 @@ significanteffect_basis*4-504
 split(significanteffect_basis, cumsum(c(TRUE, diff(significanteffect_basis) != 1))) # 56 to 68, 80 to 91, 97 to 108, 111 to 120
 
 pe_coefficients$coef_condition[significanteffect_basis]  # first coefficients are positive, later negative
-
+# note: coef_condition = (AVC - AMC)/2 due to -1/1 coding; emmean_diff = AMC - AVC (full difference in µV)
+                 
 # therefore I first look for a maximum
 which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis]))
 # maximum at samplepoint 83
@@ -72,11 +73,11 @@ which(pe_coefficients$coef_condition == min(pe_coefficients$coef_condition[signi
 
 # get relevant info
 pe_coefficients[which(pe_coefficients$coef_condition == min(pe_coefficients$coef_condition[significanteffect_basis])),
-                c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")]
+                c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition", "emmean_diff")]
 round(pe_coefficients[which(pe_coefficients$coef_condition == min(pe_coefficients$coef_condition[significanteffect_basis])),
-                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")],3)
+                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition","emmean_diff")],3)
 round(pe_coefficients[which(pe_coefficients$coef_condition == min(pe_coefficients$coef_condition[significanteffect_basis])),
-                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")],2)
+                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition","emmean_diff")],2)
 
 ## PE ####
 
@@ -118,7 +119,8 @@ round(pe_coefficients[which(pe_coefficients$coef_interaction == max(pe_coefficie
                       c("coef_interaction", "se_interaction", "df_interaction", "t_interaction" , "p_interaction", "effectsize_interaction")],2)
 
 ## Follow-up tests against zero ####
-
+# (across the whole segment; uncorrected p < .05, descriptive, as in Fig. S4)
+                 
 significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc < .05) # follow-up tests only checked for p < .05
 diff(significanteffect_diff_zero_amc)
 significanteffect_diff_zero_amc*4-504
@@ -153,7 +155,8 @@ significanteffect_basis*4-504
 split(significanteffect_basis, cumsum(c(TRUE, diff(significanteffect_basis) != 1))) # 245 to 253, 257 to 262
 
 pe_coefficients$coef_condition[significanteffect_basis]  # all coefficients are positive
-
+# note: coef_condition = (AVC - AMC)/2 due to -1/1 coding; emmean_diff = AMC - AVC (full difference in µV)
+                 
 # therefore I look for a maximum
 which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis]))
 # maximum at samplepoint 249
@@ -162,13 +165,15 @@ which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[signi
 
 # get relevant info
 pe_coefficients[which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis])),
-                c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")]
+                c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition", "emmean_diff")]
 round(pe_coefficients[which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis])),
-                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")],3)
+                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition", "emmean_diff")],3)
 round(pe_coefficients[which(pe_coefficients$coef_condition == max(pe_coefficients$coef_condition[significanteffect_basis])),
-                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition")],2)
+                      c("coef_condition", "se_condition", "df_condition", "t_condition" , "p_condition", "effectsize_condition", "emmean_diff")],2)
 
 ## Follow-up tests against zero ####
+# (across the whole segment; uncorrected p < .05, descriptive, as in Fig. S4)
+                 
 significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc< .05)
 significanteffect_diff_zero_amc*4-504
 
@@ -230,6 +235,8 @@ round(pe_coefficients[which(abs(pe_coefficients$coef_interaction) == max(abs(pe_
 
 
 ## Follow-up tests against zero ####
+# (across the whole segment; uncorrected p < .05, descriptive, as in Fig. S4)
+                 
 significanteffect_diff_zero_amc <- which(pe_coefficients$emmean_p_amc < .05)
 significanteffect_diff_zero_amc*4-504
 split(significanteffect_diff_zero_amc*4-504, cumsum(c(TRUE, diff(significanteffect_diff_zero_amc) != 1)))
