@@ -20,18 +20,12 @@ getwd() # show current working directory
 
 # if the working directory should be changed, do something like:
 setwd("\\\\psychologie.ad.hhu.de/biopsych_experimente/Studien_Daten/2024_CW_N1OMOBS")
-##### Optional: Clear workspace in between #####
 
-# either preserve all further needed objects before deleting the rest:
-needed_objects <- c(which(ls()=="data_corrected"), which(ls()=="alpha_range"))
-remove(list = ls()[-needed_objects]) # clean ws
+##### Read and prepare corrected data for mixed models ####
 
 # define needed objects and read data
 alpha_range <- c(round(exp(seq(log(0.01), log(0.7), length.out = 8)),3))
 data_corrected <- data.table::fread("aggregated_data/bva_export_files_concatenated_500pre_600post_with_empty_artifact_rows_and_labels_and_pes_only_corrected_omission_trials_no_baseline.csv")
-
-
-##### Prepare corrected data for mixed models ####
 
 data <- data_corrected # rename
 data <- as.data.frame(data) # ensure that data is a data frame (and not a list)
