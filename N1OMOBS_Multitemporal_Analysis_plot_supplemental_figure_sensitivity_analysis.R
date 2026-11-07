@@ -97,11 +97,11 @@ par(mfrow = c(1, 6),  mai = c(0.7, 0.8, 0.4, 0),  mgp = c(3.6, 0.8, 0),  tcl = -
 ## (open = without, filled = with baseline correction; circle = random effects as in main analysis, square = additional random slope)
 variant_pch_s5 <- variant_pch
 
-## y-axis limits and ticks for coefficients (cluster-specific, positive up)
+## y-axis limits and ticks for coefficients (cluster-specific, negative up as in the other figures)
 # both clusters are shown on the same range (0.8), shifted to their value limits
-ylim_frontocentral <- c(-0.4, 0.4)
+ylim_frontocentral <- c(0.4, -0.4)
 yticks_frontocentral <- seq(-0.4, 0.4, by = 0.2) # small ticks at 0.2 steps, labels at 0.4 steps
-ylim_left_temporal <- c(0, 0.8)
+ylim_left_temporal <- c(0.8, 0)
 yticks_left_temporal <- seq(0, 0.8, by = 0.2) # small ticks at 0.2 steps, labels at 0.4 steps (0, 0.4, 0.8)
 
 ## custom plot function
@@ -164,7 +164,7 @@ plot_window_effect <- function(dat, t1, t2, panel_title, yaxis_label, ylim_b, yt
     
     # add coral circle for singular fit models
     if (dat$singular[row] == 1) {
-      points(x_variant[v], ylim_b[1]+(.0375*abs(diff(ylim_b))), pch = 19, col = "coral", xpd = T)
+           points(x_variant[v], ylim_b[1]-(.0375*abs(diff(ylim_b))), pch = 19, col = "coral", xpd = T)
     }
   }
   
