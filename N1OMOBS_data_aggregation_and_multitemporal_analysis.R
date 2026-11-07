@@ -664,7 +664,6 @@ withCallingHandlers({
     ## test simple effects and their difference:
     emmeans <- emmeans::emmeans(samplepoint_regression,
                                 specs=pairwise~condition_model, 
-                                var="condition_model",
                                 infer=TRUE,
                                 adj="none",
                                 lmer.df="asymp")
@@ -802,7 +801,6 @@ withCallingHandlers({
     ## test simple effects and their difference:
     emmeans <- emmeans::emmeans(samplepoint_regression,
                                 specs=pairwise~condition_model, 
-                                var="condition_model",
                                 infer=TRUE,
                                 adj="none",
                                 lmer.df="asymp")
@@ -936,7 +934,6 @@ withCallingHandlers({
     ## test simple effects and their difference:
     emmeans <- emmeans::emmeans(samplepoint_regression,
                                 specs=pairwise~condition_model, 
-                                var="condition_model",
                                 infer=TRUE,
                                 adj="none",
                                 lmer.df="asymp")
@@ -1091,7 +1088,6 @@ for (p in 1:length(pe_variables)) {
       ## test simple effects and their difference:
       emmeans <- emmeans::emmeans(samplepoint_regression,
                                   specs=pairwise~condition_model+pe_absolute, 
-                                  var="condition_model",
                                   infer=TRUE,
                                   adj="none",
                                   lmer.df="asymp",
@@ -1287,7 +1283,6 @@ for (p in 1:length(pe_variables)) {
       ## test simple effects and their difference:
       emmeans <- emmeans::emmeans(samplepoint_regression,
                                   specs=pairwise~condition_model+pe_absolute, 
-                                  var="condition_model",
                                   infer=TRUE,
                                   adj="none",
                                   lmer.df="asymp",
@@ -1480,7 +1475,6 @@ for (p in 1:length(pe_variables)) {
       ## test simple effects and their difference:
       emmeans <- emmeans::emmeans(samplepoint_regression,
                                   specs=pairwise~condition_model+pe_absolute, 
-                                  var="condition_model",
                                   infer=TRUE,
                                   adj="none",
                                   lmer.df="asymp",
