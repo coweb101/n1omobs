@@ -1533,10 +1533,6 @@ data_grand_averages <- data.table::fread("aggregated_data/bva_export_files_conca
 
 
 ## Set up lists for loops ####
-
-# caution: this list is in the main plot script not for looping through all PEs but only to select the "best per cluster")
-# pe_list <- c(0.01, 0.01,0.7,0.01) # from other script # now selected during BIC value plotting
-
 cluster_list <- c("frontocentral_cluster",  "left_temporal_cluster", "right_temporal_cluster")
 electrodes_list <- list(c("F3", "Fz", "F4", "FC3", "FCz", "FC4", "C3", "Cz", "C4"), # frontocentral cluster
                         c("FT7", "T7"), # left temporal cluster
