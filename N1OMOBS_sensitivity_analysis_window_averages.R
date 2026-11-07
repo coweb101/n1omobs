@@ -202,7 +202,6 @@ withCallingHandlers({
         ## Follow-up tests: tests against zero for AMC and AVC separately (at median PE, as in the main analysis)
         emmeans <- emmeans::emmeans(window_regression,
                                     specs=pairwise~condition_model+pe_absolute,
-                                    var="condition_model",
                                     infer=TRUE,
                                     adj="none",
                                     lmer.df="asymp",
@@ -356,7 +355,6 @@ withCallingHandlers({
         ## Follow-up tests: tests against zero for AMC and AVC separately
         emmeans <- emmeans::emmeans(window_regression,
                                     specs=pairwise~condition_model,
-                                    var="condition_model",
                                     infer=TRUE,
                                     adj="none",
                                     lmer.df="asymp")
